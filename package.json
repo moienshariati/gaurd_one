@@ -1,0 +1,13 @@
+{
+  "name": "viperone-guard",
+  "version": "1.0.0",
+  "private": true,
+  "description": "ViperOne Guard mobile security shift management prototype.",
+  "scripts": {
+    "dev": "node dev-server.mjs",
+    "start": "node dev-server.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

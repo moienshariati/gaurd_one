@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ViperOne Guard — Screen Overview</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    html, body { background: #11161f; }
+    .cv-phone { position: relative; width: 360px; height: 760px; background: var(--shell); border-radius: 28px;
+      overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 20px 50px -20px rgba(0,0,0,.6); font-size: 15.5px; }
+    .cv-phone .app { flex: 1 1 auto; min-height: 0; }
+    .cv-phone .scroll { overflow: hidden; }
+  </style>
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel" src="design-canvas.jsx"></script>
+  <script type="text/babel" src="icons.jsx"></script>
+  <script type="text/babel" src="components.jsx"></script>
+  <script type="text/babel" src="screens-core.jsx"></script>
+  <script type="text/babel" src="screens-active.jsx"></script>
+  <script type="text/babel">
+    const { DesignCanvas, DCSection, DCArtboard } = window;
+    const DATA = { guard: 'Michael Carter', site: 'North Gate Commercial Plaza', address: '1450 Gateway Blvd, North District',
+      client: 'US Security Svc', shift: '08:00 – 16:00', distance: '0.6 mi' };
+    const MSGS = [
+      { from: 'them', text: "Morning Michael — you're on North Gate today, 08:00 start. Confirm when you arrive.", time: '07:40' },
+      { from: 'me', text: 'Copy. En route now, ETA 07:55.', time: '07:46' },
+      { from: 'them', text: 'Great. Gate code is in the post orders. Radio me if any issues.', time: '07:47' },
+      { from: 'me', text: 'Arrived on site. Clocking in.', time: '08:01' },
+    ];
+    const INC = [
+      { category: 'Maintenance', title: 'Unsecured door at Loading Dock', severity: 'High', status: 'In Progress', time: '08:12', evidence: 2 },
+      { category: 'Security Issue', title: 'Suspicious vehicle in Lot A', severity: 'Medium', status: 'Acknowledged', time: '07:58', evidence: 1 },
+      { category: 'Maintenance', title: 'Lighting outage — east wall', severity: 'Low', status: 'Resolved', time: 'Yesterday', evidence: 0 },
+    ];
+    const A = { go(){}, setStatus(){}, toast(){}, back: 'shift', reset(){} };
+    const noop = () => {};
+
+    function Bar() {
+      return (
+        <div className="statusbar">
+          <span>08:02</span>
+          <span className="sb-icons">
+            <window.Icon name="signal" size={16} fill color="var(--on-shell)" stroke={0} />
+            <window.Icon name="wifi" size={15} color="var(--on-shell)" stroke={2.2} />
+            <window.Icon name="battery" size={20} color="var(--on-shell)" stroke={1.8} />
+          </span>
+        </div>
+      );
+    }
+    function Frame({ children, login, accent = 'blue' }) {
+      return (
+        <div className="cv-phone" data-mode="day" data-accent={accent} data-radius="rounded">
+          {!login && <Bar />}
+          <div className="app">{login && <div style={{ height: 44 }} />}{children}</div>
+        </div>
+      );
+    }
+
+    function CanvasApp() {
+      return (
+        <DesignCanvas>
+          <DCSection id="s1" title="Onboarding & Assignment" subtitle="Secure access → review the job → accept">
+            <DCArtboard id="login" label="01 · Login" width={360} height={760}><Frame login><window.LoginScreen A={A} /></Frame></DCArtboard>
+            <DCArtboard id="home" label="02 · Home / Today's Shift" width={360} height={760}><Frame><window.HomeScreen A={A} status="assigned" data={DATA} counts={{ tasks: 2, incidents: 2, messages: 2 }} /></Frame></DCArtboard>
+            <DCArtboard id="job" label="03 · Job Detail" width={360} height={760}><Frame><window.JobDetailScreen A={A} status="assigned" data={DATA} /></Frame></DCArtboard>
+          </DCSection>
+
+          <DCSection id="s2" title="Clock-In & Active Shift" subtitle="GPS + photo verification → on-shift operations → patrol">
+            <DCArtboard id="gps" label="04 · GPS Verification / Clock-In" width={360} height={760}><Frame><window.ClockInScreen A={A} data={DATA} /></Frame></DCArtboard>
+            <DCArtboard id="active" label="05 · Active Shift Dashboard" width={360} height={760}><Frame><window.ActiveShiftScreen A={A} data={DATA} patrol={{ done: 4, total: 8, next: 'Service Corridor' }} /></Frame></DCArtboard>
+            <DCArtboard id="patrol" label="06 · Patrol / Checkpoint Scan" width={360} height={760}><Frame><window.PatrolScreen A={A} patrol={{ done: 4, total: 8, next: 'Service Corridor' }} setPatrol={noop} /></Frame></DCArtboard>
+          </DCSection>
+
+          <DCSection id="s3" title="Reporting, Safety & Wrap-Up" subtitle="Incidents → emergency → comms → clock-out">
+            <DCArtboard id="reports" label="07 · Incident List" width={360} height={760}><Frame><window.ReportsScreen A={A} data={DATA} mode="list" setMode={noop} incidents={INC} addIncident={noop} /></Frame></DCArtboard>
+            <DCArtboard id="form" label="08 · Incident Report" width={360} height={760}><Frame><window.ReportsScreen A={A} data={DATA} mode="form" setMode={noop} incidents={INC} addIncident={noop} /></Frame></DCArtboard>
+            <DCArtboard id="sos" label="09 · SOS Alert" width={360} height={760}><Frame><window.SosScreen A={A} /></Frame></DCArtboard>
+            <DCArtboard id="msg" label="10 · Messages" width={360} height={760}><Frame><window.MessagesScreen A={A} messages={MSGS} send={noop} /></Frame></DCArtboard>
+            <DCArtboard id="out" label="11 · Clock Out" width={360} height={760}><Frame><window.ClockOutScreen A={A} data={DATA} patrol={{ done: 8, total: 8, next: '—' }} /></Frame></DCArtboard>
+          </DCSection>
+
+          <DCSection id="s4" title="Theme Variants" subtitle="Same Active Shift screen across accent + night-mode tweaks">
+            <DCArtboard id="v-navy" label="Accent · Navy" width={360} height={760}><Frame accent="navy"><window.ActiveShiftScreen A={A} data={DATA} patrol={{ done: 4, total: 8, next: 'Service Corridor' }} /></Frame></DCArtboard>
+            <DCArtboard id="v-slate" label="Accent · Slate" width={360} height={760}><Frame accent="slate"><window.ActiveShiftScreen A={A} data={DATA} patrol={{ done: 4, total: 8, next: 'Service Corridor' }} /></Frame></DCArtboard>
+            <DCArtboard id="v-night" label="Night-Shift Mode" width={360} height={760}>
+              <div className="cv-phone" data-mode="night" data-accent="blue" data-radius="rounded">
+                <Bar /><div className="app"><window.ActiveShiftScreen A={A} data={DATA} patrol={{ done: 4, total: 8, next: 'Service Corridor' }} /></div>
+              </div>
+            </DCArtboard>
+          </DCSection>
+        </DesignCanvas>
+      );
+    }
+    ReactDOM.createRoot(document.getElementById('root')).render(<CanvasApp />);
+  </script>
+</body>
+</html>
