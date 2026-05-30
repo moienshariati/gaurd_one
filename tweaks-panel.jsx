@@ -65,6 +65,12 @@ const __TWEAKS_STYLE = `
     border:.5px solid rgba(255,255,255,.6);border-radius:14px;
     box-shadow:0 1px 0 rgba(255,255,255,.5) inset,0 12px 40px rgba(0,0,0,.18);
     font:11.5px/1.4 ui-sans-serif,system-ui,-apple-system,sans-serif;overflow:hidden}
+  .twk-fab{position:fixed;right:16px;bottom:16px;z-index:2147483646;width:34px;height:34px;
+    border:0;border-radius:10px;background:rgba(250,249,247,.82);color:#29261b;
+    -webkit-backdrop-filter:blur(18px) saturate(150%);backdrop-filter:blur(18px) saturate(150%);
+    box-shadow:0 1px 0 rgba(255,255,255,.5) inset,0 8px 24px rgba(0,0,0,.18);
+    font:700 12px/1 ui-sans-serif,system-ui,-apple-system,sans-serif;cursor:default}
+  .twk-fab:hover{background:rgba(255,255,255,.94)}
   .twk-hd{display:flex;align-items:center;justify-content:space-between;
     padding:10px 8px 10px 14px;cursor:move;user-select:none}
   .twk-hd b{font-size:12px;font-weight:600;letter-spacing:.01em}
@@ -166,6 +172,7 @@ const __TWEAKS_STYLE = `
     filter:drop-shadow(0 1px 1px rgba(0,0,0,.3))}
 
   @media (max-width:480px){
+    .twk-fab{right:8px;bottom:8px;width:30px;height:30px;border-radius:9px;font-size:11px}
     .twk-panel{right:8px!important;bottom:8px!important;width:min(236px,calc(100vw - 16px));
       max-height:min(42vh,320px);font-size:11px;border-radius:12px}
     .twk-hd{padding:8px 7px 8px 10px}
@@ -273,7 +280,15 @@ function TweaksPanel({ title = 'Tweaks', children }) {
     window.addEventListener('mouseup', up);
   };
 
-  if (!open) return null;
+  if (!open) {
+    return (
+      <>
+        <style>{__TWEAKS_STYLE}</style>
+        <button type="button" className="twk-fab" aria-label="Open tweaks"
+                title="Tweaks" onClick={() => setOpen(true)}>T</button>
+      </>
+    );
+  }
   return (
     <>
       <style>{__TWEAKS_STYLE}</style>
