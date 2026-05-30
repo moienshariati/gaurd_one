@@ -164,6 +164,16 @@ const __TWEAKS_STYLE = `
   .twk-chip>span>i:first-child{box-shadow:none}
   .twk-chip svg{position:absolute;top:6px;left:6px;width:13px;height:13px;
     filter:drop-shadow(0 1px 1px rgba(0,0,0,.3))}
+
+  @media (max-width:480px){
+    .twk-panel{right:8px!important;bottom:8px!important;width:min(236px,calc(100vw - 16px));
+      max-height:min(42vh,320px);font-size:11px;border-radius:12px}
+    .twk-hd{padding:8px 7px 8px 10px}
+    .twk-body{padding:0 10px 10px;gap:8px}
+    .twk-sect{padding-top:6px}
+    .twk-seg button{min-height:20px;padding:3px 4px}
+    .twk-chip{height:36px}
+  }
 `;
 
 // ── useTweaks ───────────────────────────────────────────────────────────────
