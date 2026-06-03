@@ -56,20 +56,21 @@
       .vf-go-live { pointer-events: auto; margin-left: auto; height: 46px; padding: 0 18px; border: 0; border-radius: 14px; cursor: pointer; font-family: var(--font-title); font-weight: 800; font-size: 14px; color: #fff; background: #16a34a; box-shadow: 0 14px 34px rgba(22,163,74,.32); display: inline-flex; align-items: center; gap: 9px; transition: transform .15s ease, filter .15s ease; }
       .vf-go-live:hover { filter: brightness(1.04); }
       .vf-go-live:active { transform: scale(.98); }
-      .vf-zoom-controls { pointer-events: auto; position: fixed; z-index: 31; right: 20px; bottom: 20px; display: flex; align-items: center; gap: 6px; padding: 6px; border-radius: 14px; background: rgba(255,255,255,.84); border: 1px solid rgba(15,23,42,.1); box-shadow: 0 14px 34px rgba(15,23,42,.15); backdrop-filter: blur(16px); }
+      .vf-zoom-controls { pointer-events: auto; position: fixed; z-index: 31; right: 20px; bottom: 28px; display: flex; align-items: center; gap: 6px; padding: 6px; border-radius: 14px; background: rgba(255,255,255,.84); border: 1px solid rgba(15,23,42,.1); box-shadow: 0 14px 34px rgba(15,23,42,.15); backdrop-filter: blur(16px); }
       .vf-zoom-controls button { width: 36px; height: 34px; border: 0; border-radius: 10px; cursor: pointer; background: #f1f5f9; color: #0f172a; font-family: var(--font-title); font-weight: 800; font-size: 15px; }
       .vf-zoom-controls button:hover { background: #e2e8f0; }
       .vf-zoom-value { min-width: 48px; text-align: center; font-family: var(--font-mono); font-size: 12px; font-weight: 800; color: #475569; }
       .vf-phone { position: relative; width: 360px; height: 760px; background: var(--shell); overflow: hidden; display: flex; flex-direction: column; font-size: 15.5px; }
       .vf-phone .app { flex: 1 1 auto; min-height: 0; }
       .vf-phone .scroll { overflow: hidden; }
-      .vf-map-viewport { position: absolute; inset: 0; overflow: auto; padding: 88px 0 80px; background: #efeee9; }
-      .vf-map-world-wrap { width: calc(1980px * var(--vf-zoom, 1)); height: calc(5480px * var(--vf-zoom, 1)); position: relative; }
-      .vf-map-world { position: relative; width: 1980px; height: 5480px; transform: scale(var(--vf-zoom, 1)); transform-origin: top left; background-image: linear-gradient(rgba(15,23,42,.055) 1px, transparent 1px), linear-gradient(90deg, rgba(15,23,42,.055) 1px, transparent 1px); background-size: 120px 120px; }
+      .vf-map-viewport { position: absolute; inset: 0; overflow: auto; padding: 88px 0 220px; background: #efeee9; }
+      .vf-map-world-wrap { width: max(calc(2460px * var(--vf-zoom, 1)), calc(100vw + 520px)); height: calc(4860px * var(--vf-zoom, 1) + 520px); position: relative; }
+      .vf-map-world { position: relative; width: 2460px; height: 4860px; transform: scale(var(--vf-zoom, 1)); transform-origin: top left; background-image: linear-gradient(rgba(15,23,42,.055) 1px, transparent 1px), linear-gradient(90deg, rgba(15,23,42,.055) 1px, transparent 1px); background-size: 120px 120px; }
       .vf-map-title { position: absolute; left: 64px; top: 26px; font-family: var(--font-title); font-size: 30px; font-weight: 800; color: #3c352d; }
       .vf-map-subtitle { position: absolute; left: 64px; top: 66px; font-size: 15px; color: #756d63; }
       .vf-lane-title { position: absolute; font-family: var(--font-title); font-size: 22px; font-weight: 800; color: #3c352d; }
       .vf-lane-sub { position: absolute; font-size: 13px; color: #756d63; }
+      .vf-flow-band { position: absolute; left: 44px; right: 44px; height: 1px; border-top: 1px solid rgba(15,23,42,.1); }
       .vf-node { position: absolute; z-index: 2; }
       .vf-node-label { display: inline-flex; align-items: center; gap: 8px; height: 28px; padding: 0 2px; font-family: var(--font-title); font-size: 15px; font-weight: 800; color: #62594f; }
       .vf-node-label::before { content: ""; width: 8px; height: 8px; border-radius: 999px; background: #2563eb; box-shadow: 0 0 0 4px rgba(37,99,235,.13); }
@@ -79,6 +80,38 @@
       .vf-node-card { margin-top: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(15,23,42,.08), 0 20px 46px rgba(15,23,42,.13); border: 1px solid rgba(15,23,42,.08); background: #fff; }
       .vf-hub-callout { position: absolute; z-index: 3; width: 260px; padding: 14px 16px; border-radius: 14px; background: #fff; border: 1px solid rgba(15,23,42,.1); box-shadow: 0 14px 36px rgba(15,23,42,.11); color: #475569; font-size: 13px; line-height: 1.45; }
       .vf-hub-callout strong { display: block; font-family: var(--font-title); color: #0f172a; margin-bottom: 4px; }
+      .vf-design-system { position: absolute; z-index: 3; width: 860px; padding: 14px; border-radius: 18px; background: #dfe9f8; border: 3px solid #5960f2; box-shadow: 0 24px 56px rgba(30,41,59,.18); }
+      .vf-ds-caption { position: absolute; left: 6px; top: -30px; display: flex; align-items: center; gap: 6px; font-family: var(--font-title); font-size: 14px; font-weight: 800; color: #f8fafc; text-shadow: 0 1px 2px rgba(0,0,0,.22); }
+      .vf-ds-grid { display: grid; grid-template-columns: 210px 1fr 1fr 1fr; gap: 12px; }
+      .vf-ds-stack { display: grid; gap: 10px; }
+      .vf-ds-card { min-height: 118px; border-radius: 14px; background: #edf4ff; border: 1px solid rgba(98,116,150,.15); padding: 16px; color: #0f172a; }
+      .vf-ds-color { overflow: hidden; min-height: 116px; padding: 0; }
+      .vf-ds-color-head { height: 66px; padding: 14px 16px; display: flex; justify-content: space-between; font-family: var(--font-title); font-size: 13px; font-weight: 800; color: #fff; background: var(--base); }
+      .vf-ds-ramp { display: grid; grid-template-columns: repeat(9, 1fr); height: 50px; }
+      .vf-ds-step { background: color-mix(in srgb, var(--base) var(--mix), #fff); }
+      .vf-ds-step:first-child { background: #06101f; border-bottom-left-radius: 14px; }
+      .vf-ds-step:last-child { border-bottom-right-radius: 14px; }
+      .vf-ds-meta { display: flex; justify-content: space-between; font-family: var(--font-title); font-size: 12px; font-weight: 800; color: #7b8798; }
+      .vf-ds-type { display: flex; align-items: flex-end; justify-content: space-between; min-height: 110px; }
+      .vf-ds-type strong { font-family: var(--font-title); font-size: 92px; line-height: .74; color: var(--type); letter-spacing: 0; }
+      .vf-ds-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; align-content: center; min-height: 112px; }
+      .vf-ds-button { height: 34px; border-radius: 6px; border: 1px solid transparent; font-family: var(--font-title); font-size: 12px; font-weight: 800; display: grid; place-items: center; }
+      .vf-ds-button.primary { background: #4f46e5; color: #fff; }
+      .vf-ds-button.secondary { background: #e6eefb; color: #27324a; }
+      .vf-ds-button.inverted { background: #142236; color: #fff; }
+      .vf-ds-button.outlined { background: transparent; border-color: #93a2b8; color: #27324a; }
+      .vf-ds-search { height: 42px; border-radius: 6px; border: 1px solid #b8c5da; background: #e7eefb; display: flex; align-items: center; gap: 10px; padding: 0 14px; color: #475569; font-size: 14px; margin-top: 20px; }
+      .vf-ds-lines { display: grid; gap: 10px; padding-top: 24px; }
+      .vf-ds-line { height: 6px; border-radius: 999px; background: #d4e2f6; overflow: hidden; }
+      .vf-ds-line span { display: block; height: 100%; border-radius: inherit; background: var(--line); width: var(--w); }
+      .vf-ds-nav { height: 54px; margin-top: 24px; border-radius: 18px; background: #e6eefb; display: flex; align-items: center; justify-content: center; gap: 30px; color: #0f172a; }
+      .vf-ds-nav span { width: 34px; height: 34px; border-radius: 999px; display: grid; place-items: center; }
+      .vf-ds-nav span:first-child { background: #4f46e5; color: #fff; }
+      .vf-ds-icon-row { display: flex; align-items: center; justify-content: center; gap: 12px; min-height: 112px; }
+      .vf-ds-icon-chip { width: 34px; height: 34px; border-radius: 999px; display: grid; place-items: center; color: #fff; background: var(--chip); }
+      .vf-ds-tool-row { display: flex; gap: 12px; align-items: center; justify-content: center; min-height: 112px; }
+      .vf-ds-tool { width: 48px; height: 48px; border-radius: 8px; display: grid; place-items: center; background: #8b5cf6; color: #fff; }
+      .vf-ds-tool-label { height: 36px; padding: 0 18px; border-radius: 6px; display: inline-flex; gap: 8px; align-items: center; background: #6366f1; color: #fff; font-family: var(--font-title); font-size: 12px; font-weight: 800; }
       .vf-map-wire-layer { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; z-index: 1; }
       .vf-map-marker-layer { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; z-index: 5; }
       .vf-map-wire { fill: none; stroke: #2563eb; stroke-width: 3.5; stroke-linecap: round; stroke-linejoin: round; opacity: .82; }
@@ -138,9 +171,10 @@
       @keyframes vfArtboardGather { to { transform: translate3d(0, -18px, 0) scale(.88); opacity: .88; filter: saturate(.65); } }
       @keyframes vfCanvasOut { 0% { opacity: 1; filter: blur(0); } 62% { opacity: .88; filter: blur(2px); } 100% { opacity: 0; filter: blur(10px); transform: scale(.9); } }
       @media (max-width: 720px) {
-        .vf-topbar { top: 10px; left: 10px; right: 10px; }
+        .vf-topbar { top: 10px; left: 10px; right: 10px; flex-wrap: wrap; row-gap: 8px; }
         .vf-brand-sub { display: none; }
         .vf-go-live { height: 42px; padding: 0 14px; }
+        .vf-map-viewport { padding-top: 132px; }
       }
     `;
     document.head.appendChild(style);
@@ -453,8 +487,105 @@
     );
   }
 
+  function DesignSystemPalette() {
+    const ramps = [
+      { name: 'Primary', hex: '#2563EB', base: '#4f46e5' },
+      { name: 'Secondary', hex: '#0EA5E9', base: '#0ea5e9' },
+      { name: 'Success', hex: '#16A34A', base: '#16a34a' },
+      { name: 'Neutral', hex: '#64748B', base: '#64748b' },
+    ];
+    const mixes = ['100%', '88%', '76%', '64%', '52%', '40%', '28%', '16%', '6%'];
+
+    return (
+      <div className="vf-design-system">
+        <div className="vf-ds-caption">
+          <window.Icon name="target" size={16} stroke={2.4} />
+          ViperOne Design System
+        </div>
+        <div className="vf-ds-grid">
+          <div className="vf-ds-stack">
+            {ramps.map((ramp) => (
+              <div className="vf-ds-card vf-ds-color" key={ramp.name} style={{ '--base': ramp.base }}>
+                <div className="vf-ds-color-head">
+                  <span>{ramp.name}</span>
+                  <span>{ramp.hex}</span>
+                </div>
+                <div className="vf-ds-ramp">
+                  {mixes.map((mix) => <span key={mix} className="vf-ds-step" style={{ '--mix': mix }} />)}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="vf-ds-stack">
+            <div className="vf-ds-card">
+              <div className="vf-ds-meta"><span>Headline</span><span>Geist</span></div>
+              <div className="vf-ds-type" style={{ '--type': '#0f172a' }}><strong>Aa</strong></div>
+            </div>
+            <div className="vf-ds-card">
+              <div className="vf-ds-meta"><span>Body</span><span>Inter</span></div>
+              <div className="vf-ds-type" style={{ '--type': '#4b4b5f' }}><strong>Aa</strong></div>
+            </div>
+            <div className="vf-ds-card">
+              <div className="vf-ds-meta"><span>Label</span><span>Geist</span></div>
+              <div className="vf-ds-type" style={{ '--type': '#52525f' }}><strong>Aa</strong></div>
+            </div>
+          </div>
+
+          <div className="vf-ds-stack">
+            <div className="vf-ds-card">
+              <div className="vf-ds-buttons">
+                <span className="vf-ds-button primary">Primary</span>
+                <span className="vf-ds-button secondary">Secondary</span>
+                <span className="vf-ds-button inverted">Inverted</span>
+                <span className="vf-ds-button outlined">Outlined</span>
+              </div>
+            </div>
+            <div className="vf-ds-card">
+              <div className="vf-ds-lines">
+                <div className="vf-ds-line"><span style={{ '--line': '#4f46e5', '--w': '72%' }} /></div>
+                <div className="vf-ds-line"><span style={{ '--line': '#0e7490', '--w': '88%' }} /></div>
+                <div className="vf-ds-line"><span style={{ '--line': '#6d28d9', '--w': '56%' }} /></div>
+              </div>
+            </div>
+            <div className="vf-ds-card">
+              <div className="vf-ds-tool-row">
+                <span className="vf-ds-tool"><window.Icon name="sign" size={20} stroke={2.5} /></span>
+                <span className="vf-ds-tool-label"><window.Icon name="sign" size={15} stroke={2.5} />Label</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="vf-ds-stack">
+            <div className="vf-ds-card">
+              <div className="vf-ds-search">
+                <window.Icon name="target" size={17} />
+                <span>Search</span>
+              </div>
+            </div>
+            <div className="vf-ds-card">
+              <div className="vf-ds-nav">
+                <span><window.Icon name="home" size={17} /></span>
+                <span><window.Icon name="route" size={17} /></span>
+                <span><window.Icon name="user" size={17} /></span>
+              </div>
+            </div>
+            <div className="vf-ds-card">
+              <div className="vf-ds-icon-row">
+                <span className="vf-ds-icon-chip" style={{ '--chip': '#4f46e5' }}><window.Icon name="target" size={16} /></span>
+                <span className="vf-ds-icon-chip" style={{ '--chip': '#0e7490' }}><window.Icon name="shield" size={16} /></span>
+                <span className="vf-ds-icon-chip" style={{ '--chip': '#7c3aed' }}><window.Icon name="flag" size={16} /></span>
+                <span className="vf-ds-icon-chip" style={{ '--chip': '#dc2626' }}><window.Icon name="alert" size={15} /></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   function FlowCanvas({ onGoLive }) {
-    const [zoom, setZoom] = useState(.82);
+    const [zoom, setZoom] = useState(.72);
     const setClampedZoom = (next) => setZoom(Math.max(.45, Math.min(1.25, next)));
     const wires = [
       { from: 'landing', to: 'signin', label: 'Open', fromX: .88, fromY: .82, toX: .06, toY: .5 },
@@ -495,7 +626,7 @@
           <button aria-label="Zoom out" onClick={() => setClampedZoom(zoom - .12)}>-</button>
           <div className="vf-zoom-value">{Math.round(zoom * 100)}%</div>
           <button aria-label="Zoom in" onClick={() => setClampedZoom(zoom + .12)}>+</button>
-          <button aria-label="Reset zoom" onClick={() => setClampedZoom(.82)}>1:1</button>
+          <button aria-label="Reset zoom" onClick={() => setClampedZoom(.72)}>1:1</button>
         </div>
 
         <div className="vf-map-viewport" onWheel={(e) => {
@@ -506,77 +637,85 @@
           <div className="vf-map-world-wrap" style={{ '--vf-zoom': zoom }}>
           <div className="vf-map-world">
             <div className="vf-map-title">ViperOne App Flow</div>
-            <div className="vf-map-subtitle">Hub screens stay on the left. Their buttons, bottom navigation, and action destinations branch vertically on the right.</div>
-            <div className="vf-lane-title" style={{ left: 72, top: 900 }}>Guard Home Hub</div>
-            <div className="vf-lane-sub" style={{ left: 72, top: 930 }}>The home screen owns the bottom navigation and schedule/clock-in branch.</div>
-            <div className="vf-lane-title" style={{ left: 72, top: 2220 }}>Active Shift Hub</div>
-            <div className="vf-lane-sub" style={{ left: 72, top: 2250 }}>Once clocked in, field-operation buttons branch to their own screens.</div>
-            <div className="vf-lane-title" style={{ left: 72, top: 4380 }}>Supervisor / Client Branch</div>
-            <div className="vf-lane-sub" style={{ left: 72, top: 4410 }}>Role-specific dashboards remain separate from guard execution.</div>
+            <div className="vf-map-subtitle">Wire-free overview. Each row is one product flow, arranged left to right in the order a user reads it.</div>
 
-            <FlowMapWireLayer wires={wires} />
-
-            <FlowNode id="landing" label="01 - Landing" x={72} y={120} order={0}>
+            <div className="vf-lane-title" style={{ left: 72, top: 120 }}>Entry & Role Selection</div>
+            <div className="vf-lane-sub" style={{ left: 72, top: 150 }}>Public entry and role-aware sign in.</div>
+            <div style={{ position: 'absolute', left: 900, top: 200 }}>
+              <DesignSystemPalette />
+            </div>
+            <FlowNode id="landing" label="01 - Landing" x={72} y={200} order={0}>
               <Frame login><window.LandingScreen A={A} /></Frame>
             </FlowNode>
-            <FlowNode id="signin" label="02 - Sign In / Role Split" x={560} y={120} order={1}>
+            <FlowNode id="signin" label="02 - Sign In / Role Split" x={520} y={200} order={1}>
               <Frame login><window.SignInScreen A={A} role="guard" /></Frame>
             </FlowNode>
-            <div className="vf-hub-callout" style={{ left: 1020, top: 180 }}>
+            <div className="vf-hub-callout" style={{ left: 2010, top: 260 }}>
               <strong>Role split</strong>
-              Sign-in branches to Guard, Supervisor, or Client. Manager/Admin are still missing from the app.
+              Sign-in currently branches to Guard, Supervisor, or Client. Manager/Admin are still missing from the app.
             </div>
 
-            <FlowNode id="guard-home" label="03 - Guard Home with Bottom Nav" x={72} y={980} tone="ok" order={2}>
+            <div className="vf-flow-band" style={{ top: 1020 }} />
+            <div className="vf-lane-title" style={{ left: 72, top: 1080 }}>Guard Start Flow</div>
+            <div className="vf-lane-sub" style={{ left: 72, top: 1110 }}>One Home screen, then adjacent destination screens.</div>
+            <FlowNode id="guard-home" label="03 - Guard Home" x={72} y={1160} tone="ok" order={2}>
               <Frame navActive="home"><window.HomeScreen A={A} data={DATA} counts={COUNTS} onClockIn={NOOP} onSchedule={NOOP} /></Frame>
             </FlowNode>
-            <FlowNode id="schedule" label="Home branch - Schedule" x={560} y={720} order={3}>
+            <FlowNode id="schedule" label="04 - Schedule" x={520} y={1160} order={3}>
               <Frame navActive="home"><window.ScheduleScreen A={A} /></Frame>
             </FlowNode>
-            <FlowNode id="clockin" label="Home branch - Clock In" x={1048} y={720} tone="ok" order={4}>
+            <FlowNode id="clockin" label="05 - Clock In" x={968} y={1160} tone="ok" order={4}>
               <Frame><ClockInFlowPreview /></Frame>
             </FlowNode>
-            <FlowNode id="active-shift" label="Clock-in result - Active Shift Hub" x={72} y={2300} tone="ok" order={5}>
+            <FlowNode id="active-shift" label="06 - Active Shift Hub" x={1416} y={1160} tone="ok" order={5}>
               <Frame navActive="home"><window.ActiveShiftScreen A={A} data={DATA} patrol={PATROL} /></Frame>
             </FlowNode>
 
-            <FlowNode id="patrol" label="Patrol destination" x={560} y={1980} order={6}>
+            <div className="vf-flow-band" style={{ top: 2120 }} />
+            <div className="vf-lane-title" style={{ left: 72, top: 2180 }}>Active Shift Operations</div>
+            <div className="vf-lane-sub" style={{ left: 72, top: 2210 }}>Operational screens available from the Active Shift hub.</div>
+            <FlowNode id="patrol" label="07 - Patrol" x={72} y={2260} order={6}>
               <Frame navActive="patrol"><window.PatrolScreen A={A} patrol={PATROL} setPatrol={NOOP} /></Frame>
             </FlowNode>
-            <FlowNode id="visitor-log" label="Active Shift branch - Visitor Log" x={1048} y={1980} order={7}>
+            <FlowNode id="visitor-log" label="08 - Visitor Log" x={520} y={2260} order={7}>
               <Frame><window.VisitorLogScreen A={A} data={DATA} /></Frame>
             </FlowNode>
-            <FlowNode id="dar" label="Active Shift branch - DAR" x={1536} y={1980} order={8}>
+            <FlowNode id="dar" label="09 - DAR" x={968} y={2260} order={8}>
               <Frame><window.DailyActivityScreen A={A} data={DATA} /></Frame>
             </FlowNode>
-
-            <FlowNode id="incident-list" label="Bottom nav/action - Reports" x={560} y={2940} tone="warn" order={9}>
-              <Frame navActive="reports"><window.ReportsScreen A={A} data={DATA} mode="list" setMode={NOOP} incidents={INCIDENTS} addIncident={NOOP} /></Frame>
-            </FlowNode>
-            <FlowNode id="incident-form" label="Reports continues - Incident Form" x={1048} y={2940} tone="warn" order={10}>
-              <Frame navActive="reports"><window.ReportsScreen A={A} data={DATA} mode="form" setMode={NOOP} incidents={INCIDENTS} addIncident={NOOP} /></Frame>
-            </FlowNode>
-            <FlowNode id="messages" label="Bottom nav - Messages" x={1536} y={2940} order={11}>
-              <Frame navActive="messages"><window.MessagesScreen A={A} messages={MSGS} send={NOOP} /></Frame>
-            </FlowNode>
-
-            <FlowNode id="sos" label="Center nav - SOS" x={560} y={3820} tone="danger" order={12}>
-              <Frame><window.SosScreen A={A} /></Frame>
-            </FlowNode>
-            <FlowNode id="clockout" label="Active Shift action - Clock Out" x={1048} y={3820} tone="ok" order={13}>
+            <FlowNode id="clockout" label="10 - Clock Out" x={1416} y={2260} tone="ok" order={13}>
               <Frame><window.ClockOutScreen A={A} data={DATA} patrol={DONE_PATROL} /></Frame>
             </FlowNode>
 
-            <FlowNode id="supervisor-home" label="Supervisor Home" x={72} y={4480} order={14}>
+            <div className="vf-flow-band" style={{ top: 3220 }} />
+            <div className="vf-lane-title" style={{ left: 72, top: 3280 }}>Reports, Messaging & Safety</div>
+            <div className="vf-lane-sub" style={{ left: 72, top: 3310 }}>Incident reporting, messaging, and emergency actions grouped together.</div>
+            <FlowNode id="incident-list" label="11 - Reports" x={72} y={3360} tone="warn" order={9}>
+              <Frame navActive="reports"><window.ReportsScreen A={A} data={DATA} mode="list" setMode={NOOP} incidents={INCIDENTS} addIncident={NOOP} /></Frame>
+            </FlowNode>
+            <FlowNode id="incident-form" label="12 - Incident Form" x={520} y={3360} tone="warn" order={10}>
+              <Frame navActive="reports"><window.ReportsScreen A={A} data={DATA} mode="form" setMode={NOOP} incidents={INCIDENTS} addIncident={NOOP} /></Frame>
+            </FlowNode>
+            <FlowNode id="messages" label="13 - Messages" x={968} y={3360} order={11}>
+              <Frame navActive="messages"><window.MessagesScreen A={A} messages={MSGS} send={NOOP} /></Frame>
+            </FlowNode>
+            <FlowNode id="sos" label="14 - SOS" x={1416} y={3360} tone="danger" order={12}>
+              <Frame><window.SosScreen A={A} /></Frame>
+            </FlowNode>
+
+            <div className="vf-flow-band" style={{ top: 4300 }} />
+            <div className="vf-lane-title" style={{ left: 72, top: 4360 }}>Supervisor & Client</div>
+            <div className="vf-lane-sub" style={{ left: 72, top: 4390 }}>Role-specific visibility screens, kept separate from guard execution.</div>
+            <FlowNode id="supervisor-home" label="15 - Supervisor Home" x={72} y={4440} order={14}>
               <Frame><window.SupervisorHomeScreen A={A} incidents={INCIDENTS} /></Frame>
             </FlowNode>
-            <FlowNode id="supervisor-schedule" label="Supervisor branch - Assignments" x={560} y={4480} order={15}>
+            <FlowNode id="supervisor-schedule" label="16 - Assignments" x={520} y={4440} order={15}>
               <Frame><window.SupervisorScheduleScreen A={A} /></Frame>
             </FlowNode>
-            <FlowNode id="supervisor-reports" label="Supervisor branch - Reports" x={1048} y={4480} tone="warn" order={16}>
+            <FlowNode id="supervisor-reports" label="17 - Supervisor Reports" x={968} y={4440} tone="warn" order={16}>
               <Frame><window.ReportsScreen A={A} data={DATA} mode="list" setMode={NOOP} incidents={INCIDENTS} addIncident={NOOP} /></Frame>
             </FlowNode>
-            <FlowNode id="client-home" label="Client Home / Read-only output" x={1536} y={4480} order={17}>
+            <FlowNode id="client-home" label="18 - Client Home" x={1416} y={4440} order={17}>
               <Frame><window.ClientHomeScreen A={A} incidents={INCIDENTS} data={DATA} /></Frame>
             </FlowNode>
           </div>
