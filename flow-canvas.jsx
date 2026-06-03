@@ -56,9 +56,38 @@
       .vf-go-live { pointer-events: auto; margin-left: auto; height: 46px; padding: 0 18px; border: 0; border-radius: 14px; cursor: pointer; font-family: var(--font-title); font-weight: 800; font-size: 14px; color: #fff; background: #16a34a; box-shadow: 0 14px 34px rgba(22,163,74,.32); display: inline-flex; align-items: center; gap: 9px; transition: transform .15s ease, filter .15s ease; }
       .vf-go-live:hover { filter: brightness(1.04); }
       .vf-go-live:active { transform: scale(.98); }
+      .vf-zoom-controls { pointer-events: auto; position: fixed; z-index: 31; right: 20px; bottom: 20px; display: flex; align-items: center; gap: 6px; padding: 6px; border-radius: 14px; background: rgba(255,255,255,.84); border: 1px solid rgba(15,23,42,.1); box-shadow: 0 14px 34px rgba(15,23,42,.15); backdrop-filter: blur(16px); }
+      .vf-zoom-controls button { width: 36px; height: 34px; border: 0; border-radius: 10px; cursor: pointer; background: #f1f5f9; color: #0f172a; font-family: var(--font-title); font-weight: 800; font-size: 15px; }
+      .vf-zoom-controls button:hover { background: #e2e8f0; }
+      .vf-zoom-value { min-width: 48px; text-align: center; font-family: var(--font-mono); font-size: 12px; font-weight: 800; color: #475569; }
       .vf-phone { position: relative; width: 360px; height: 760px; background: var(--shell); overflow: hidden; display: flex; flex-direction: column; font-size: 15.5px; }
       .vf-phone .app { flex: 1 1 auto; min-height: 0; }
       .vf-phone .scroll { overflow: hidden; }
+      .vf-map-viewport { position: absolute; inset: 0; overflow: auto; padding: 88px 0 80px; background: #efeee9; }
+      .vf-map-world-wrap { width: calc(1980px * var(--vf-zoom, 1)); height: calc(5480px * var(--vf-zoom, 1)); position: relative; }
+      .vf-map-world { position: relative; width: 1980px; height: 5480px; transform: scale(var(--vf-zoom, 1)); transform-origin: top left; background-image: linear-gradient(rgba(15,23,42,.055) 1px, transparent 1px), linear-gradient(90deg, rgba(15,23,42,.055) 1px, transparent 1px); background-size: 120px 120px; }
+      .vf-map-title { position: absolute; left: 64px; top: 26px; font-family: var(--font-title); font-size: 30px; font-weight: 800; color: #3c352d; }
+      .vf-map-subtitle { position: absolute; left: 64px; top: 66px; font-size: 15px; color: #756d63; }
+      .vf-lane-title { position: absolute; font-family: var(--font-title); font-size: 22px; font-weight: 800; color: #3c352d; }
+      .vf-lane-sub { position: absolute; font-size: 13px; color: #756d63; }
+      .vf-node { position: absolute; z-index: 2; }
+      .vf-node-label { display: inline-flex; align-items: center; gap: 8px; height: 28px; padding: 0 2px; font-family: var(--font-title); font-size: 15px; font-weight: 800; color: #62594f; }
+      .vf-node-label::before { content: ""; width: 8px; height: 8px; border-radius: 999px; background: #2563eb; box-shadow: 0 0 0 4px rgba(37,99,235,.13); }
+      .vf-node[data-tone="ok"] .vf-node-label::before { background: #16a34a; box-shadow: 0 0 0 4px rgba(22,163,74,.13); }
+      .vf-node[data-tone="warn"] .vf-node-label::before { background: #f59e0b; box-shadow: 0 0 0 4px rgba(245,158,11,.16); }
+      .vf-node[data-tone="danger"] .vf-node-label::before { background: #dc2626; box-shadow: 0 0 0 4px rgba(220,38,38,.13); }
+      .vf-node-card { margin-top: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(15,23,42,.08), 0 20px 46px rgba(15,23,42,.13); border: 1px solid rgba(15,23,42,.08); background: #fff; }
+      .vf-hub-callout { position: absolute; z-index: 3; width: 260px; padding: 14px 16px; border-radius: 14px; background: #fff; border: 1px solid rgba(15,23,42,.1); box-shadow: 0 14px 36px rgba(15,23,42,.11); color: #475569; font-size: 13px; line-height: 1.45; }
+      .vf-hub-callout strong { display: block; font-family: var(--font-title); color: #0f172a; margin-bottom: 4px; }
+      .vf-map-wire-layer { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; z-index: 1; }
+      .vf-map-marker-layer { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; z-index: 5; }
+      .vf-map-wire { fill: none; stroke: #2563eb; stroke-width: 3.5; stroke-linecap: round; stroke-linejoin: round; opacity: .82; }
+      .vf-map-wire[data-tone="ok"] { stroke: #16a34a; }
+      .vf-map-wire[data-tone="warn"] { stroke: #f59e0b; }
+      .vf-map-wire[data-tone="danger"] { stroke: #dc2626; }
+      .vf-map-wire-dot, .vf-map-wire-target { fill: #fff; stroke: currentColor; stroke-width: 3; filter: drop-shadow(0 3px 7px rgba(15,23,42,.24)); }
+      .vf-map-wire-label-box { fill: rgba(255,255,255,.96); stroke: rgba(15,23,42,.14); stroke-width: 1; filter: drop-shadow(0 6px 12px rgba(15,23,42,.16)); }
+      .vf-map-wire-label { font-family: var(--font-title); font-size: 13px; font-weight: 800; fill: #1e293b; dominant-baseline: middle; }
       .vf-note { position: absolute; width: 210px; padding: 13px 14px; border-radius: 12px; background: #fff; border: 1px solid rgba(15,23,42,.1); box-shadow: 0 14px 32px rgba(15,23,42,.1); font-family: var(--font-body); font-size: 13px; line-height: 1.45; color: #475569; }
       .vf-note strong { display: block; font-family: var(--font-title); color: #0f172a; font-size: 13px; margin-bottom: 4px; }
       .vf-wire-layer { position: absolute; inset: 0; overflow: visible; pointer-events: none; z-index: 1; }
@@ -71,7 +100,8 @@
       .vf-live-stage { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; padding: 24px; background: radial-gradient(1200px 600px at 50% -10%, #122036 0%, transparent 60%), #070C16; opacity: 0; pointer-events: none; transform: scale(.98); transition: opacity .45s ease, transform .45s ease; }
       .vf-root[data-mode="live"] .vf-live-stage, .vf-root[data-mode="transitioning"] .vf-live-stage { opacity: 1; transform: none; pointer-events: auto; }
       .vf-root[data-mode="transitioning"] .vf-canvas-shell { animation: vfCanvasOut 1.35s cubic-bezier(.2,.8,.2,1) forwards; }
-      .vf-root[data-mode="transitioning"] [data-dc-slot] { animation: vfArtboardGather 1.1s cubic-bezier(.2,.8,.2,1) forwards; animation-delay: calc(var(--vf-order, 0) * 26ms); }
+      .vf-root[data-mode="transitioning"] [data-dc-slot],
+      .vf-root[data-mode="transitioning"] .vf-node { animation: vfArtboardGather 1.1s cubic-bezier(.2,.8,.2,1) forwards; animation-delay: calc(var(--vf-order, 0) * 22ms); }
       [data-dc-slot="landing"] { --vf-order: 0; }
       [data-dc-slot="signin"] { --vf-order: 1; }
       [data-dc-slot="home"] { --vf-order: 2; }
@@ -97,6 +127,12 @@
       .vf-root[data-mode="transitioning"] .dc-sectionhead,
       .vf-root[data-mode="transitioning"] .dc-header,
       .vf-root[data-mode="transitioning"] .vf-note,
+      .vf-root[data-mode="transitioning"] .vf-map-wire-layer,
+      .vf-root[data-mode="transitioning"] .vf-map-title,
+      .vf-root[data-mode="transitioning"] .vf-map-subtitle,
+      .vf-root[data-mode="transitioning"] .vf-lane-title,
+      .vf-root[data-mode="transitioning"] .vf-lane-sub,
+      .vf-root[data-mode="transitioning"] .vf-hub-callout,
       .vf-root[data-mode="transitioning"] .vf-topbar { animation: vfFadeOut .45s ease forwards; }
       @keyframes vfFadeOut { to { opacity: 0; transform: translateY(-8px); } }
       @keyframes vfArtboardGather { to { transform: translate3d(0, -18px, 0) scale(.88); opacity: .88; filter: saturate(.65); } }
@@ -123,11 +159,22 @@
     );
   }
 
-  function Frame({ children, login, accent = 'blue', night = false, order = 0 }) {
+  function Frame({ children, login, accent = 'blue', night = false, navActive, order = 0 }) {
     return (
       <div className="vf-phone" data-mode={night ? 'night' : 'day'} data-accent={accent} data-radius="rounded" style={{ '--vf-order': order }}>
         {!login && <StatusBar />}
-        <div className="app">{login && <div style={{ height: 44 }} />}{children}</div>
+        <div className="app">
+          {login && <div style={{ height: 44 }} />}
+          {children}
+        </div>
+        {navActive && (
+          <window.BottomNavigation
+            active={navActive}
+            onNav={NOOP}
+            onSos={NOOP}
+            badges={{ reports: 2, messages: 2 }}
+          />
+        )}
       </div>
     );
   }
@@ -204,8 +251,231 @@
     );
   }
 
+  function FlowNode({ id, label, x, y, tone = 'info', order = 0, children }) {
+    return (
+      <div className="vf-node" data-node={id} data-tone={tone} style={{ left: x, top: y, '--vf-order': order }}>
+        <div className="vf-node-label">{label}</div>
+        <div className="vf-node-card">{children}</div>
+      </div>
+    );
+  }
+
+  function FlowMapWireLayer({ wires }) {
+    const [paths, setPaths] = useState([]);
+    const lastPaths = useRef('');
+
+    useLayoutEffect(() => {
+      let frame = 0;
+      let alive = true;
+      const measure = () => {
+        if (!alive) return;
+        const world = document.querySelector('.vf-map-world');
+        if (!world) {
+          frame = requestAnimationFrame(measure);
+          return;
+        }
+        const wr = world.getBoundingClientRect();
+        const scale = wr.width / (world.offsetWidth || wr.width || 1);
+        const point = (rect, side, xRatio, yRatio) => {
+          const x = xRatio != null
+            ? rect.left + rect.width * xRatio
+            : side === 'left'
+              ? rect.left
+              : side === 'center'
+                ? rect.left + rect.width / 2
+                : rect.right;
+          const y = rect.top + rect.height * (yRatio == null ? .5 : yRatio);
+          return { x: (x - wr.left) / scale, y: (y - wr.top) / scale };
+        };
+        const edgePoint = (rect, side, xRatio, yRatio) => {
+          const x = side === 'left'
+            ? rect.left
+            : side === 'center'
+              ? rect.left + rect.width / 2
+              : side === 'top' || side === 'bottom'
+                ? rect.left + rect.width * (xRatio == null ? .5 : xRatio)
+                : rect.right;
+          const y = side === 'top'
+            ? rect.top
+            : side === 'bottom'
+              ? rect.bottom
+              : rect.top + rect.height * (yRatio == null ? .5 : yRatio);
+          return { x: (x - wr.left) / scale, y: (y - wr.top) / scale };
+        };
+        const next = wires.map((wire) => {
+          const from = world.querySelector(`[data-node="${wire.from}"]`);
+          const to = world.querySelector(`[data-node="${wire.to}"]`);
+          if (!from || !to) return null;
+          const a = from.getBoundingClientRect();
+          const b = to.getBoundingClientRect();
+          const fromSide = wire.fromSide || 'right';
+          const toSide = wire.toSide || 'left';
+          const sourceDot = point(a, fromSide, wire.fromX, wire.fromY);
+          const targetDot = point(b, toSide, wire.toX, wire.toY);
+          const startEdge = edgePoint(a, wire.fromExitSide || fromSide, wire.fromX, wire.fromY);
+          const endEdge = edgePoint(b, wire.toEnterSide || toSide, wire.toX, wire.toY);
+          const x1 = startEdge.x;
+          const y1 = startEdge.y;
+          const x2 = endEdge.x;
+          const y2 = endEdge.y;
+          const midX = wire.midX != null ? wire.midX : x1 + (x2 - x1) * .5;
+          const corner = 10;
+          const turn1 = y2 > y1 ? y1 + corner : y1 - corner;
+          const turn2 = y2 > y1 ? y2 - corner : y2 + corner;
+          return {
+            ...wire,
+            d: Math.abs(y2 - y1) < 24
+              ? `M ${x1} ${y1} L ${x2} ${y2}`
+              : `M ${x1} ${y1} L ${midX - corner} ${y1} Q ${midX} ${y1} ${midX} ${turn1} L ${midX} ${turn2} Q ${midX} ${y2} ${midX + corner} ${y2} L ${x2} ${y2}`,
+            x1,
+            y1,
+            x2,
+            y2,
+            sx: sourceDot.x,
+            sy: sourceDot.y,
+            tx: targetDot.x,
+            ty: targetDot.y,
+            lx: wire.labelX != null ? wire.labelX : (Math.abs(y2 - y1) < 24 ? (x1 + x2) / 2 : midX),
+            ly: wire.labelY != null ? wire.labelY : (Math.abs(y2 - y1) < 24 ? y1 - 10 : y2 - 12),
+            labelW: Math.max(58, Math.min(190, String(wire.label || '').length * 7.2 + 22)),
+          };
+        }).filter(Boolean);
+        const key = JSON.stringify(next.map((p) => [p.from, p.to, p.d, p.label]));
+        if (key !== lastPaths.current) {
+          lastPaths.current = key;
+          setPaths(next);
+        }
+        frame = requestAnimationFrame(measure);
+      };
+      frame = requestAnimationFrame(measure);
+      return () => { alive = false; cancelAnimationFrame(frame); };
+    }, [JSON.stringify(wires)]);
+
+    return (
+      <React.Fragment>
+      <svg className="vf-map-wire-layer">
+        <defs>
+          {[
+            ['info', '#2563eb'],
+            ['ok', '#16a34a'],
+            ['warn', '#f59e0b'],
+            ['danger', '#dc2626'],
+          ].map(([tone, color]) => (
+            <marker key={tone} id={`vf-arrow-${tone}`} markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
+              <path d="M2 2 L10 6 L2 10 Z" fill={color} />
+            </marker>
+          ))}
+        </defs>
+        {paths.map((p) => (
+          <g key={`${p.from}-${p.to}-${p.label || ''}`} style={{ color: p.tone === 'ok' ? '#16a34a' : p.tone === 'warn' ? '#f59e0b' : p.tone === 'danger' ? '#dc2626' : '#2563eb' }}>
+            <path className="vf-map-wire" data-tone={p.tone || 'info'} d={p.d} markerEnd={`url(#vf-arrow-${p.tone || 'info'})`} />
+          </g>
+        ))}
+      </svg>
+      <svg className="vf-map-marker-layer">
+        {paths.map((p) => (
+          <g key={`${p.from}-${p.to}-${p.label || ''}-markers`} style={{ color: p.tone === 'ok' ? '#16a34a' : p.tone === 'warn' ? '#f59e0b' : p.tone === 'danger' ? '#dc2626' : '#2563eb' }}>
+            <circle className="vf-map-wire-dot" cx={p.sx} cy={p.sy} r="5" />
+            {p.label && (
+              <g>
+                <rect className="vf-map-wire-label-box" x={p.lx - p.labelW / 2} y={p.ly - 13} width={p.labelW} height="26" rx="8" />
+                <text className="vf-map-wire-label" x={p.lx} y={p.ly + 1} textAnchor="middle">{p.label}</text>
+              </g>
+            )}
+          </g>
+        ))}
+      </svg>
+      </React.Fragment>
+    );
+  }
+
+  function ClockInFlowPreview() {
+    return (
+      <div className="scroll screen-in">
+        <window.AppHeader eyebrow="Compliance" title="GPS Verification" onBack={NOOP} />
+        <div style={{ padding: '4px 16px 24px' }}>
+          <div className="card" style={{ overflow: 'hidden' }}>
+            <div style={{ position: 'relative' }}>
+              <window.MapView height={230} inside dark={false} radius="0" accuracy={5} />
+              <div style={{ position: 'absolute', top: 12, left: 12, display: 'flex', gap: 8 }}>
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, height: 28, padding: '0 10px', borderRadius: 999,
+                  background: 'rgba(8,14,26,.72)', color: '#fff', fontSize: 12, fontWeight: 700, fontFamily: 'var(--font-mono)' }}>
+                  <window.Icon name="signal" size={13} color="var(--ok)" />+/-5 m
+                </span>
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, height: 28, padding: '0 10px', borderRadius: 999,
+                  background: 'rgba(8,14,26,.72)', color: '#fff', fontSize: 12, fontWeight: 700, fontFamily: 'var(--font-mono)' }}>
+                  <window.Icon name="clock" size={13} color="var(--ink-faint)" />08:02
+                </span>
+              </div>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: 15,
+              background: 'color-mix(in srgb, var(--ok) 12%, var(--card))' }}>
+              <div style={{ width: 40, height: 40, borderRadius: 12, flex: '0 0 40px', display: 'grid', placeItems: 'center',
+                background: 'var(--ok)', color: '#fff' }}>
+                <window.Icon name="checkCircle" size={22} stroke={2.4} />
+              </div>
+              <div style={{ flex: 1 }}>
+                <div className="t-h3" style={{ color: 'var(--ok)' }}>Inside approved location</div>
+                <div style={{ color: 'var(--ink-dim)', fontSize: 12.5, marginTop: 2 }}>Within the 75 m geofence at North Gate</div>
+              </div>
+            </div>
+          </div>
+
+          <window.Section title="Clock-In Photo" style={{ marginTop: 18 }}>
+            <div className="card" style={{ padding: 16 }}>
+              <div style={{ height: 118, borderRadius: 'var(--r-sm)', display: 'grid', placeItems: 'center',
+                background: 'color-mix(in srgb, var(--ok) 12%, var(--card-2))', border: '1px solid color-mix(in srgb, var(--ok) 35%, transparent)' }}>
+                <div style={{ textAlign: 'center', color: 'var(--ok)' }}>
+                  <window.Icon name="checkCircle" size={32} color="var(--ok)" />
+                  <div style={{ fontWeight: 700, fontSize: 13, marginTop: 6, fontFamily: 'var(--font-title)' }}>Photo captured</div>
+                </div>
+              </div>
+            </div>
+          </window.Section>
+
+          <div style={{ display: 'flex', gap: 9, marginTop: 14 }}>
+            {['GPS verified', 'Photo captured'].map((label) => (
+              <div key={label} style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 8, padding: '11px 13px', borderRadius: 'var(--r-sm)',
+                background: 'color-mix(in srgb, var(--ok) 12%, var(--card))', border: '1px solid color-mix(in srgb, var(--ok) 35%, transparent)' }}>
+                <div style={{ width: 22, height: 22, borderRadius: 999, display: 'grid', placeItems: 'center', background: 'var(--ok)' }}>
+                  <window.Icon name="check" size={13} stroke={3} color="#fff" />
+                </div>
+                <span style={{ fontSize: 13, fontWeight: 700, fontFamily: 'var(--font-title)', color: 'var(--ink)' }}>{label}</span>
+              </div>
+            ))}
+          </div>
+
+          <button className="btn btn-block btn-lg btn-ok" style={{ marginTop: 18 }}>
+            <window.Icon name="clock" size={20} />Clock In Now
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   function FlowCanvas({ onGoLive }) {
-    const { DesignCanvas, DCSection, DCArtboard } = window;
+    const [zoom, setZoom] = useState(.82);
+    const setClampedZoom = (next) => setZoom(Math.max(.45, Math.min(1.25, next)));
+    const wires = [
+      { from: 'landing', to: 'signin', label: 'Open', fromX: .88, fromY: .82, toX: .06, toY: .5 },
+
+      { from: 'guard-home', to: 'schedule', fromX: .88, fromY: .87, fromExitSide: 'right', toX: .05, toY: .5 },
+      { from: 'guard-home', to: 'clockin', label: 'Clock In', fromX: .5, fromY: .44, fromExitSide: 'right', toX: .05, toY: .5, tone: 'ok', midX: 410 },
+
+      { from: 'active-shift', to: 'patrol', fromX: .28, fromY: .97, fromExitSide: 'bottom', toX: .05, toY: .5, midX: 430 },
+      { from: 'active-shift', to: 'incident-list', fromX: .76, fromY: .97, fromExitSide: 'bottom', toX: .05, toY: .5, tone: 'warn', midX: 390 },
+      { from: 'incident-list', to: 'incident-form', label: 'New', fromX: .94, fromY: .17, toX: .05, toY: .5, tone: 'warn' },
+      { from: 'active-shift', to: 'messages', fromX: .92, fromY: .97, fromExitSide: 'bottom', toX: .05, toY: .5, midX: 360 },
+      { from: 'active-shift', to: 'sos', fromX: .5, fromY: .9, fromExitSide: 'bottom', toX: .05, toY: .5, tone: 'danger', midX: 330 },
+      { from: 'active-shift', to: 'clockout', fromX: .52, fromY: .22, toX: .05, toY: .5, tone: 'ok' },
+      { from: 'active-shift', to: 'visitor-log', fromX: .28, fromY: .78, fromExitSide: 'right', toX: .05, toY: .5 },
+      { from: 'active-shift', to: 'dar', fromX: .52, fromY: .78, fromExitSide: 'right', toX: .05, toY: .5, tone: 'ok' },
+
+      { from: 'supervisor-home', to: 'supervisor-schedule', fromX: .85, fromY: .74, toX: .05, toY: .5 },
+      { from: 'supervisor-home', to: 'supervisor-reports', fromX: .72, fromY: .5, toX: .05, toY: .5, tone: 'warn' },
+      { from: 'supervisor-reports', to: 'client-home', label: 'Client view', fromX: .9, fromY: .48, toX: .05, toY: .5 },
+    ];
+
     return (
       <div className="vf-canvas-shell">
         <div className="vf-topbar">
@@ -221,67 +491,97 @@
             Go Live
           </button>
         </div>
+        <div className="vf-zoom-controls">
+          <button aria-label="Zoom out" onClick={() => setClampedZoom(zoom - .12)}>-</button>
+          <div className="vf-zoom-value">{Math.round(zoom * 100)}%</div>
+          <button aria-label="Zoom in" onClick={() => setClampedZoom(zoom + .12)}>+</button>
+          <button aria-label="Reset zoom" onClick={() => setClampedZoom(.82)}>1:1</button>
+        </div>
 
-        <DesignCanvas minScale={0.12} maxScale={4}>
-          <DCSection id="entry" title="Entry & Role Selection" subtitle="Public entry into role-aware authentication">
-            <DCArtboard id="landing" label="01 - Landing" width={360} height={760}><Frame login order={0}><window.LandingScreen A={A} /></Frame></DCArtboard>
-            <DCArtboard id="signin" label="02 - Sign In" width={360} height={760}><Frame login order={1}><window.SignInScreen A={A} role="guard" /></Frame></DCArtboard>
-            <Note left={1020} top={128} title="Branch point" text="The selected sign-in role routes the user to Guard, Supervisor, or Client flows." />
-            <FlowWireLayer sectionId="entry" wires={[
-              { from: 'landing', to: 'signin', label: 'Open ViperOne' },
-            ]} />
-          </DCSection>
+        <div className="vf-map-viewport" onWheel={(e) => {
+          if (!e.ctrlKey && !e.metaKey) return;
+          e.preventDefault();
+          setClampedZoom(zoom + (e.deltaY > 0 ? -.06 : .06));
+        }}>
+          <div className="vf-map-world-wrap" style={{ '--vf-zoom': zoom }}>
+          <div className="vf-map-world">
+            <div className="vf-map-title">ViperOne App Flow</div>
+            <div className="vf-map-subtitle">Hub screens stay on the left. Their buttons, bottom navigation, and action destinations branch vertically on the right.</div>
+            <div className="vf-lane-title" style={{ left: 72, top: 900 }}>Guard Home Hub</div>
+            <div className="vf-lane-sub" style={{ left: 72, top: 930 }}>The home screen owns the bottom navigation and schedule/clock-in branch.</div>
+            <div className="vf-lane-title" style={{ left: 72, top: 2220 }}>Active Shift Hub</div>
+            <div className="vf-lane-sub" style={{ left: 72, top: 2250 }}>Once clocked in, field-operation buttons branch to their own screens.</div>
+            <div className="vf-lane-title" style={{ left: 72, top: 4380 }}>Supervisor / Client Branch</div>
+            <div className="vf-lane-sub" style={{ left: 72, top: 4410 }}>Role-specific dashboards remain separate from guard execution.</div>
 
-          <DCSection id="guard-flow" title="Guard Shift Flow" subtitle="Assignment, verification, active field work, reports, and wrap-up">
-            <DCArtboard id="home" label="03 - Guard Home" width={360} height={760}><Frame order={2}><window.HomeScreen A={A} data={DATA} counts={COUNTS} onClockIn={NOOP} onSchedule={NOOP} /></Frame></DCArtboard>
-            <DCArtboard id="schedule" label="04 - Schedule" width={360} height={760}><Frame order={3}><window.ScheduleScreen A={A} /></Frame></DCArtboard>
-            <DCArtboard id="clockin" label="05 - Clock In" width={360} height={760}><Frame order={4}><window.ClockInScreen A={A} data={DATA} /></Frame></DCArtboard>
-            <DCArtboard id="shift" label="06 - Active Shift" width={360} height={760}><Frame order={5}><window.ActiveShiftScreen A={A} data={DATA} patrol={PATROL} /></Frame></DCArtboard>
-            <DCArtboard id="patrol" label="07 - Patrol Scan" width={360} height={760}><Frame order={6}><window.PatrolScreen A={A} patrol={PATROL} setPatrol={NOOP} /></Frame></DCArtboard>
-            <DCArtboard id="visitor" label="08 - Visitor Log" width={360} height={760}><Frame order={7}><window.VisitorLogScreen A={A} data={DATA} /></Frame></DCArtboard>
-            <DCArtboard id="dar" label="09 - DAR" width={360} height={760}><Frame order={8}><window.DailyActivityScreen A={A} data={DATA} /></Frame></DCArtboard>
-            <DCArtboard id="reports" label="10 - Incidents" width={360} height={760}><Frame order={9}><window.ReportsScreen A={A} data={DATA} mode="list" setMode={NOOP} incidents={INCIDENTS} addIncident={NOOP} /></Frame></DCArtboard>
-            <DCArtboard id="incident-form" label="11 - Incident Form" width={360} height={760}><Frame order={10}><window.ReportsScreen A={A} data={DATA} mode="form" setMode={NOOP} incidents={INCIDENTS} addIncident={NOOP} /></Frame></DCArtboard>
-            <DCArtboard id="messages" label="12 - Messages" width={360} height={760}><Frame order={11}><window.MessagesScreen A={A} messages={MSGS} send={NOOP} /></Frame></DCArtboard>
-            <DCArtboard id="sos" label="13 - SOS" width={360} height={760}><Frame order={12}><window.SosScreen A={A} /></Frame></DCArtboard>
-            <DCArtboard id="clockout" label="14 - Clock Out" width={360} height={760}><Frame order={13}><window.ClockOutScreen A={A} data={DATA} patrol={DONE_PATROL} /></Frame></DCArtboard>
-            <FlowWireLayer sectionId="guard-flow" wires={[
-              { from: 'home', to: 'schedule', label: 'View schedule' },
-              { from: 'schedule', to: 'clockin', label: 'Clock in', tone: 'ok' },
-              { from: 'clockin', to: 'shift', label: 'Start shift', tone: 'ok' },
-              { from: 'shift', to: 'patrol', label: 'Patrol' },
-              { from: 'patrol', to: 'visitor', label: 'Field ops' },
-              { from: 'visitor', to: 'dar', label: 'Log activity' },
-              { from: 'dar', to: 'reports', label: 'Reports' },
-              { from: 'reports', to: 'incident-form', label: 'New incident', tone: 'warn' },
-              { from: 'incident-form', to: 'messages', label: 'Notify' },
-              { from: 'messages', to: 'sos', label: 'Emergency', tone: 'danger' },
-              { from: 'sos', to: 'clockout', label: 'Wrap up', tone: 'ok' },
-            ]} />
-          </DCSection>
+            <FlowMapWireLayer wires={wires} />
 
-          <DCSection id="office-flow" title="Supervisor & Client Visibility" subtitle="Operational oversight and read-only client transparency">
-            <DCArtboard id="sup-home" label="15 - Supervisor Home" width={360} height={760}><Frame order={14}><window.SupervisorHomeScreen A={A} incidents={INCIDENTS} /></Frame></DCArtboard>
-            <DCArtboard id="sup-schedule" label="16 - Assignments" width={360} height={760}><Frame order={15}><window.SupervisorScheduleScreen A={A} /></Frame></DCArtboard>
-            <DCArtboard id="sup-reports" label="17 - Supervisor Reports" width={360} height={760}><Frame order={16}><window.ReportsScreen A={A} data={DATA} mode="list" setMode={NOOP} incidents={INCIDENTS} addIncident={NOOP} /></Frame></DCArtboard>
-            <DCArtboard id="client-home" label="18 - Client Home" width={360} height={760}><Frame order={17}><window.ClientHomeScreen A={A} incidents={INCIDENTS} data={DATA} /></Frame></DCArtboard>
-            <FlowWireLayer sectionId="office-flow" wires={[
-              { from: 'sup-home', to: 'sup-schedule', label: 'Schedule' },
-              { from: 'sup-schedule', to: 'sup-reports', label: 'Incidents', tone: 'warn' },
-              { from: 'sup-reports', to: 'client-home', label: 'Client view' },
-            ]} />
-          </DCSection>
+            <FlowNode id="landing" label="01 - Landing" x={72} y={120} order={0}>
+              <Frame login><window.LandingScreen A={A} /></Frame>
+            </FlowNode>
+            <FlowNode id="signin" label="02 - Sign In / Role Split" x={560} y={120} order={1}>
+              <Frame login><window.SignInScreen A={A} role="guard" /></Frame>
+            </FlowNode>
+            <div className="vf-hub-callout" style={{ left: 1020, top: 180 }}>
+              <strong>Role split</strong>
+              Sign-in branches to Guard, Supervisor, or Client. Manager/Admin are still missing from the app.
+            </div>
 
-          <DCSection id="variants" title="Presentation Variants" subtitle="Same operational screen under theme settings">
-            <DCArtboard id="blue" label="Blue Accent" width={360} height={760}><Frame order={18}><window.ActiveShiftScreen A={A} data={DATA} patrol={PATROL} /></Frame></DCArtboard>
-            <DCArtboard id="navy" label="Navy Accent" width={360} height={760}><Frame accent="navy" order={19}><window.ActiveShiftScreen A={A} data={DATA} patrol={PATROL} /></Frame></DCArtboard>
-            <DCArtboard id="night" label="Night Shift" width={360} height={760}><Frame night order={20}><window.ActiveShiftScreen A={A} data={DATA} patrol={PATROL} /></Frame></DCArtboard>
-            <FlowWireLayer sectionId="variants" wires={[
-              { from: 'blue', to: 'navy', label: 'Accent' },
-              { from: 'navy', to: 'night', label: 'Night mode' },
-            ]} />
-          </DCSection>
-        </DesignCanvas>
+            <FlowNode id="guard-home" label="03 - Guard Home with Bottom Nav" x={72} y={980} tone="ok" order={2}>
+              <Frame navActive="home"><window.HomeScreen A={A} data={DATA} counts={COUNTS} onClockIn={NOOP} onSchedule={NOOP} /></Frame>
+            </FlowNode>
+            <FlowNode id="schedule" label="Home branch - Schedule" x={560} y={720} order={3}>
+              <Frame navActive="home"><window.ScheduleScreen A={A} /></Frame>
+            </FlowNode>
+            <FlowNode id="clockin" label="Home branch - Clock In" x={1048} y={720} tone="ok" order={4}>
+              <Frame><ClockInFlowPreview /></Frame>
+            </FlowNode>
+            <FlowNode id="active-shift" label="Clock-in result - Active Shift Hub" x={72} y={2300} tone="ok" order={5}>
+              <Frame navActive="home"><window.ActiveShiftScreen A={A} data={DATA} patrol={PATROL} /></Frame>
+            </FlowNode>
+
+            <FlowNode id="patrol" label="Patrol destination" x={560} y={1980} order={6}>
+              <Frame navActive="patrol"><window.PatrolScreen A={A} patrol={PATROL} setPatrol={NOOP} /></Frame>
+            </FlowNode>
+            <FlowNode id="visitor-log" label="Active Shift branch - Visitor Log" x={1048} y={1980} order={7}>
+              <Frame><window.VisitorLogScreen A={A} data={DATA} /></Frame>
+            </FlowNode>
+            <FlowNode id="dar" label="Active Shift branch - DAR" x={1536} y={1980} order={8}>
+              <Frame><window.DailyActivityScreen A={A} data={DATA} /></Frame>
+            </FlowNode>
+
+            <FlowNode id="incident-list" label="Bottom nav/action - Reports" x={560} y={2940} tone="warn" order={9}>
+              <Frame navActive="reports"><window.ReportsScreen A={A} data={DATA} mode="list" setMode={NOOP} incidents={INCIDENTS} addIncident={NOOP} /></Frame>
+            </FlowNode>
+            <FlowNode id="incident-form" label="Reports continues - Incident Form" x={1048} y={2940} tone="warn" order={10}>
+              <Frame navActive="reports"><window.ReportsScreen A={A} data={DATA} mode="form" setMode={NOOP} incidents={INCIDENTS} addIncident={NOOP} /></Frame>
+            </FlowNode>
+            <FlowNode id="messages" label="Bottom nav - Messages" x={1536} y={2940} order={11}>
+              <Frame navActive="messages"><window.MessagesScreen A={A} messages={MSGS} send={NOOP} /></Frame>
+            </FlowNode>
+
+            <FlowNode id="sos" label="Center nav - SOS" x={560} y={3820} tone="danger" order={12}>
+              <Frame><window.SosScreen A={A} /></Frame>
+            </FlowNode>
+            <FlowNode id="clockout" label="Active Shift action - Clock Out" x={1048} y={3820} tone="ok" order={13}>
+              <Frame><window.ClockOutScreen A={A} data={DATA} patrol={DONE_PATROL} /></Frame>
+            </FlowNode>
+
+            <FlowNode id="supervisor-home" label="Supervisor Home" x={72} y={4480} order={14}>
+              <Frame><window.SupervisorHomeScreen A={A} incidents={INCIDENTS} /></Frame>
+            </FlowNode>
+            <FlowNode id="supervisor-schedule" label="Supervisor branch - Assignments" x={560} y={4480} order={15}>
+              <Frame><window.SupervisorScheduleScreen A={A} /></Frame>
+            </FlowNode>
+            <FlowNode id="supervisor-reports" label="Supervisor branch - Reports" x={1048} y={4480} tone="warn" order={16}>
+              <Frame><window.ReportsScreen A={A} data={DATA} mode="list" setMode={NOOP} incidents={INCIDENTS} addIncident={NOOP} /></Frame>
+            </FlowNode>
+            <FlowNode id="client-home" label="Client Home / Read-only output" x={1536} y={4480} order={17}>
+              <Frame><window.ClientHomeScreen A={A} incidents={INCIDENTS} data={DATA} /></Frame>
+            </FlowNode>
+          </div>
+          </div>
+        </div>
       </div>
     );
   }
