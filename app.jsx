@@ -27,7 +27,7 @@
   }/*EDITMODE-END*/;
 
   const TAB_OF = { home: 'home', shift: 'home', patrol: 'patrol', reports: 'reports', messages: 'messages' };
-  const SHOW_NAV = ['home', 'shift', 'patrol', 'reports'];
+  const SHOW_NAV = ['home', 'shift', 'patrol', 'reports', 'messages'];
 
   function StatusBar({ night }) {
     const [now, setNow] = useState(new Date());
@@ -46,7 +46,9 @@
 
   function App() {
     const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
-    const [screen, setScreen] = useState('login');
+    const [screen, setScreen] = useState('landing');
+    const [role, setRole] = useState('guard'); // guard | supervisor | client
+    // PRD states: assigned (has shift, not clocked in) | clocked_in | patrol | completed
     const [status, setStatus] = useState('assigned');
     const [patrol, setPatrol] = useState({ done: 4, total: 8, next: 'Service Corridor' });
     const [incidents, setIncidents] = useState(SEED_INC);
@@ -64,10 +66,11 @@
         if (s === 'sos') setSosFrom(SHOW_NAV.includes(screen) || screen === 'messages' ? screen : 'shift');
         setScreen(s);
       },
+      setRole: (r) => setRole(r),
       setStatus: (s) => setStatus(s),
       toast: pushToast,
       back: sosFrom,
-      reset: () => { setScreen('home'); },
+      reset: () => { setScreen('landing'); setRole('guard'); setStatus('assigned'); },
     };
 
     const sendMsg = (text) => {
@@ -79,31 +82,41 @@
     const openIncidents = incidents.filter(i => i.status !== 'Resolved').length;
     const counts = { tasks: 2, incidents: openIncidents, messages: messages.filter(m => m.from === 'them').length - 1 };
 
-    let body;
-    if (screen === 'login') body = <window.LoginScreen A={A} />;
-    else if (screen === 'home') body = <window.HomeScreen A={A} status={status} data={DATA} counts={counts} />;
-    else if (screen === 'jobDetail') body = <window.JobDetailScreen A={A} status={status} data={DATA} night={t.night} />;
-    else if (screen === 'clockin') body = <window.ClockInScreen A={A} data={DATA} night={t.night} />;
-    else if (screen === 'shift') body = <window.ActiveShiftScreen A={A} data={DATA} patrol={patrol} />;
-    else if (screen === 'patrol') body = <window.PatrolScreen A={A} patrol={patrol} setPatrol={setPatrol} />;
-    else if (screen === 'reports') body = <window.ReportsScreen A={A} data={DATA} mode={reportsMode} setMode={setReportsMode} incidents={incidents} addIncident={addIncident} />;
-    else if (screen === 'messages') body = <window.MessagesScreen A={A} messages={messages} send={sendMsg} />;
-    else if (screen === 'sos') body = <window.SosScreen A={A} />;
-    else if (screen === 'clockout') body = <window.ClockOutScreen A={A} data={DATA} patrol={patrol} night={t.night} />;
+    // Determine which home to land on after sign-in
+    const homeScreen = role === 'supervisor' ? 'sup-home' : role === 'client' ? 'client-home' : 'home';
 
-    const showNav = SHOW_NAV.includes(screen);
-    const showStatusBar = screen !== 'login';
+    let body;
+    if (screen === 'landing')          body = <window.LandingScreen A={A} />;
+    else if (screen === 'signin')      body = <window.SignInScreen A={A} role={role} />;
+    else if (screen === 'home')        body = <window.HomeScreen A={A} data={DATA} counts={counts} onClockIn={() => A.go('clockin')} onSchedule={() => A.go('schedule')} />;
+    else if (screen === 'schedule')    body = <window.ScheduleScreen A={A} />;
+    else if (screen === 'clockin')     body = <window.ClockInScreen A={A} data={DATA} night={t.night} />;
+    else if (screen === 'shift')       body = <window.ActiveShiftScreen A={A} data={DATA} patrol={patrol} />;
+    else if (screen === 'patrol')      body = <window.PatrolScreen A={A} patrol={patrol} setPatrol={setPatrol} />;
+    else if (screen === 'reports')     body = <window.ReportsScreen A={A} data={DATA} mode={reportsMode} setMode={setReportsMode} incidents={incidents} addIncident={addIncident} />;
+    else if (screen === 'messages')    body = <window.MessagesScreen A={A} messages={messages} send={sendMsg} />;
+    else if (screen === 'sos')         body = <window.SosScreen A={A} />;
+    else if (screen === 'clockout')    body = <window.ClockOutScreen A={A} data={DATA} patrol={patrol} night={t.night} />;
+    else if (screen === 'visitor-log') body = <window.VisitorLogScreen A={A} data={DATA} />;
+    else if (screen === 'dar')         body = <window.DailyActivityScreen A={A} data={DATA} />;
+    else if (screen === 'sup-home')     body = <window.SupervisorHomeScreen A={A} incidents={incidents} />;
+    else if (screen === 'sup-schedule') body = <window.SupervisorScheduleScreen A={A} />;
+    else if (screen === 'client-home') body = <window.ClientHomeScreen A={A} incidents={incidents} data={DATA} />;
+
+    const isLanding = screen === 'landing';
+    const isSignIn  = screen === 'signin';
+    const showNav   = SHOW_NAV.includes(screen);
+    const showStatusBar = !isLanding && !isSignIn;
 
     return (
-      <div className="phone" data-mode={t.night ? 'night' : 'day'} data-accent={t.accent} data-radius={t.radius}>
+      <div className="phone" data-mode={isLanding ? 'night' : (t.night ? 'night' : 'day')} data-accent={t.accent} data-radius={t.radius}>
         {showStatusBar && <StatusBar night={t.night} />}
-        <div className="app" style={{ paddingTop: showStatusBar ? 0 : 0 }}>
-          {/* offset for non-statusbar (login) */}
-          {!showStatusBar && <div style={{ height: 44, flex: '0 0 44px' }} />}
+        <div className="app" style={{ background: isLanding ? '#07111F' : undefined }}>
+          {!showStatusBar && !isLanding && <div style={{ height: 44, flex: '0 0 44px' }} />}
           {body}
           <Toast toast={toast} />
         </div>
-        {showNav && <BottomNavigation active={TAB_OF[screen]} onNav={(id) => A.go(id === 'home' ? (['clocked_in', 'patrol', 'completed'].includes(status) ? 'shift' : 'home') : id)}
+        {showNav && <BottomNavigation active={TAB_OF[screen]} onNav={(id) => A.go(id === 'home' ? (status === 'clocked_in' || status === 'patrol' ? 'shift' : 'home') : id)}
           onSos={() => A.go('sos')} badges={{ reports: openIncidents || undefined, messages: counts.messages > 0 ? counts.messages : undefined }} />}
 
         <TweaksPanel>

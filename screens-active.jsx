@@ -9,15 +9,87 @@
     return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
   };
 
+  /* ============================ WELFARE CHECK (FR-33, ADD-FR-19) ============================ */
+  // Timer-based "I'm Alive" — guard must check in every INTERVAL seconds
+  const WELFARE_INTERVAL = 30 * 60; // 30 min in production; shortened for demo
+  function useWelfareTimer() {
+    const [active, setActive] = useState(false);
+    const [remaining, setRemaining] = useState(WELFARE_INTERVAL);
+    const [overdue, setOverdue] = useState(false);
+    const intervalRef = useRef(null);
+    const checkin = () => {
+      setActive(true); setOverdue(false); setRemaining(WELFARE_INTERVAL);
+      clearInterval(intervalRef.current);
+      intervalRef.current = setInterval(() => {
+        setRemaining(r => {
+          if (r <= 1) { setOverdue(true); clearInterval(intervalRef.current); return 0; }
+          return r - 1;
+        });
+      }, 1000);
+    };
+    useEffect(() => () => clearInterval(intervalRef.current), []);
+    return { active, remaining, overdue, checkin };
+  }
+
+  function WelfareBar({ remaining, overdue, onCheckin, onManDown }) {
+    const mins = Math.floor(remaining / 60), secs = remaining % 60;
+    const pct = remaining / WELFARE_INTERVAL * 100;
+    const tone = overdue ? 'var(--danger)' : remaining < 5 * 60 ? 'var(--warn)' : 'var(--ok)';
+    return (
+      <div style={{ margin: '0 16px 16px', padding: '12px 14px', borderRadius: 14,
+        background: overdue ? 'color-mix(in srgb, var(--danger) 14%, var(--card))' : 'var(--card)',
+        border: `1px solid ${overdue ? 'color-mix(in srgb,var(--danger) 45%,transparent)' : 'var(--card-line)'}` }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <Icon name="heartbeat" size={18} color={tone} />
+          <div style={{ flex: 1 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span style={{ fontSize: 13, fontWeight: 700, color: overdue ? 'var(--danger)' : 'var(--ink)', fontFamily: 'var(--font-title)' }}>
+                {overdue ? '⚠ Welfare check overdue' : 'Next check-in'}
+              </span>
+              <span className="t-mono" style={{ fontSize: 12, fontWeight: 700, color: tone }}>
+                {overdue ? 'ESCALATING' : `${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`}
+              </span>
+            </div>
+            <div style={{ height: 4, borderRadius: 2, background: 'var(--card-line)', marginTop: 6, overflow: 'hidden' }}>
+              <div style={{ height: '100%', width: `${pct}%`, background: tone, borderRadius: 2, transition: 'width 1s linear, background .3s' }} />
+            </div>
+          </div>
+          <button className="btn btn-md" onClick={onCheckin}
+            style={{ height: 34, padding: '0 12px', fontSize: 12, borderRadius: 9, background: tone, color: '#fff', flexShrink: 0 }}>
+            I'm OK
+          </button>
+        </div>
+        {/* FR-35: man-down escalation when overdue */}
+        {overdue && (
+          <div style={{ marginTop: 10, display: 'flex', gap: 8 }}>
+            <div style={{ flex: 1, fontSize: 12, color: 'var(--danger)', fontWeight: 600 }}>
+              Supervisor alert sent. Tap if you need emergency help.
+            </div>
+            <button className="btn btn-md btn-danger" style={{ height: 32, padding: '0 12px', fontSize: 12, borderRadius: 9, flexShrink: 0 }}
+              onClick={onManDown}>
+              Man Down
+            </button>
+          </div>
+        )}
+      </div>
+    );
+  }
+
   /* ============================ ACTIVE SHIFT ============================ */
   function ActiveShiftScreen({ A, data, patrol }) {
     const [t, setT] = useState(2 * 3600 + 34 * 60 + 12);
-    const [alive, setAlive] = useState(false);
+    const welfare = useWelfareTimer();
     useEffect(() => { const id = setInterval(() => setT(x => x + 1), 1000); return () => clearInterval(id); }, []);
     const tasks = [
       { t: 'Check front gate', done: true }, { t: 'Patrol parking area', done: true },
       { t: 'Inspect loading dock', done: false }, { t: 'Submit activity note', done: false },
     ];
+
+    const handleAlive = () => {
+      welfare.checkin();
+      A.toast({ msg: `Safety check sent · ${new Date().toTimeString().slice(0,5)} · supervisor notified`, icon: 'heartbeat' });
+    };
+
     return (
       <div className="scroll screen-in">
         {/* live timer header */}
@@ -27,34 +99,43 @@
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <StatusBadge tone="ok" label="On Shift · Active" icon="bolt" on="shell" pulse />
               <div style={{ color: 'var(--on-shell-dim)', fontSize: 12.5, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 6 }}>
-                <Icon name="pin" size={14} color="var(--on-shell-dim)" />{data.site}</div>
+                <Icon name="pin" size={14} color="var(--on-shell-dim)" />{data.site}
+              </div>
             </div>
             <div className="t-mono" style={{ fontSize: 52, fontWeight: 700, color: 'var(--on-shell)', letterSpacing: '.01em', marginTop: 16, lineHeight: 1 }}>{fmt(t)}</div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 8 }}>
-              <div style={{ color: 'var(--on-shell-dim)', fontSize: 13, fontWeight: 600 }}>On shift · started 08:02 · ends 16:00</div>
+              <div style={{ color: 'var(--on-shell-dim)', fontSize: 13, fontWeight: 600 }}>Started 08:02 · ends 16:00</div>
               <div className="t-mono" style={{ color: 'var(--ok)', fontSize: 13, fontWeight: 700 }}>5h 26m left</div>
             </div>
           </div>
         </div>
 
-        <div style={{ padding: '20px 16px 24px' }}>
-          {/* primary ops */}
+        {/* welfare check bar — visible when active or overdue (FR-33, FR-35) */}
+        {(welfare.active || welfare.overdue) && (
+          <WelfareBar remaining={welfare.remaining} overdue={welfare.overdue} onCheckin={handleAlive}
+            onManDown={() => { A.go('sos'); A.toast({ msg: 'Man-down alert triggered — help is coming', icon: 'alert', tone: 'danger' }); }} />
+        )}
+
+        <div style={{ padding: '4px 16px 24px' }}>
+          {/* field ops — PRD 8.2 / 8.3 / 6.1 */}
           <Section title="Field Operations">
-            <QuickActionGrid cols={2}>
-              <QuickAction icon="route" label="Scan Checkpoint" tone="ok" onClick={() => A.go('patrol')} />
-              <QuickAction icon="alert" label="Report Incident" tone="warn" onClick={() => A.go('reports', { mode: 'form' })} />
-              <QuickAction icon="heartbeat" label="I'm Alive" tone="accent" onClick={() => { setAlive(true); A.toast({ msg: 'Safety check sent · 08:36 · supervisor notified', icon: 'heartbeat' }); }} />
-              <QuickAction icon="chat" label="Message Supervisor" tone="info" onClick={() => A.go('messages')} />
+            <QuickActionGrid cols={3}>
+              <QuickAction icon="route"      label="Patrol"       tone="ok"     onClick={() => A.go('patrol')} />
+              <QuickAction icon="alert"      label="Incident"     tone="warn"   onClick={() => A.go('reports', { mode: 'form' })} />
+              <QuickAction icon="heartbeat"  label="I'm Alive"    tone="accent" onClick={handleAlive} />
+              <QuickAction icon="user"       label="Visitor"      tone="info"   onClick={() => A.go('visitor-log')} />
+              <QuickAction icon="clipboard"  label="DAR"          tone="ok"     onClick={() => A.go('dar')} />
+              <QuickAction icon="chat"       label="Messages"     tone="info"   onClick={() => A.go('messages')} />
             </QuickActionGrid>
           </Section>
 
           {/* patrol progress */}
-          <Section title="Patrol Progress" style={{ marginTop: 22 }} action="Open Patrol" onAction={() => A.go('patrol')}>
+          <Section title="Patrol Progress" style={{ marginTop: 22 }} action="Open" onAction={() => A.go('patrol')}>
             <PatrolProgressCard route="Main Patrol Route" done={patrol.done} total={patrol.total}
               next={patrol.next} remaining="42 min" onClick={() => A.go('patrol')} />
           </Section>
 
-          {/* tasks */}
+          {/* tasks (PRD: task management FR-6.1) */}
           <Section title="Shift Tasks" style={{ marginTop: 22 }}>
             <div className="card" style={{ padding: '6px 16px' }}>
               {tasks.map((task, i) => (
@@ -62,9 +143,10 @@
                   borderBottom: i < tasks.length - 1 ? '1px solid var(--card-line)' : 'none' }}>
                   <div style={{ width: 25, height: 25, borderRadius: 8, flex: '0 0 25px', display: 'grid', placeItems: 'center',
                     background: task.done ? 'var(--ok)' : 'transparent', border: task.done ? 'none' : '2px solid var(--card-line)' }}>
-                    {task.done && <Icon name="check" size={14} stroke={3} color="#fff" />}</div>
-                  <span style={{ flex: 1, fontSize: 14.5, fontWeight: 600, color: task.done ? 'var(--ink-faint)' : 'var(--ink)',
-                    textDecoration: task.done ? 'line-through' : 'none' }}>{task.t}</span>
+                    {task.done && <Icon name="check" size={14} stroke={3} color="#fff" />}
+                  </div>
+                  <span style={{ flex: 1, fontSize: 14.5, fontWeight: 600,
+                    color: task.done ? 'var(--ink-faint)' : 'var(--ink)', textDecoration: task.done ? 'line-through' : 'none' }}>{task.t}</span>
                   {!task.done && <Icon name="chevron" size={17} color="var(--ink-faint)" />}
                 </div>
               ))}
@@ -72,7 +154,8 @@
           </Section>
 
           <button className="btn btn-block btn-lg btn-ghost-light" style={{ marginTop: 22 }} onClick={() => A.go('clockout')}>
-            <Icon name="clock" size={19} />End Shift & Clock Out</button>
+            <Icon name="clock" size={19} />End Shift & Clock Out
+          </button>
         </div>
       </div>
     );
@@ -182,41 +265,117 @@
   /* ============================ REPORTS / INCIDENT ============================ */
   const CATS = ['Security Issue', 'Maintenance', 'Parking', 'Visitor', 'Contractor', 'Emergency', 'Other'];
   const SEV = [{ k: 'Low', tone: 'ok' }, { k: 'Medium', tone: 'info' }, { k: 'High', tone: 'warn' }, { k: 'Critical', tone: 'danger' }];
+  const FILTERS = ['All', 'Open', 'Security', 'Maintenance', 'Resolved'];
+
+  function ExportSheet({ onClose, onExport }) {
+    return (
+      <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,.45)', zIndex: 50, display: 'flex', alignItems: 'flex-end' }}
+        onClick={onClose}>
+        <div onClick={e => e.stopPropagation()}
+          style={{ width: '100%', background: 'var(--card)', borderRadius: '22px 22px 0 0', padding: '20px 20px 32px', animation: 'sheetUp .25s ease' }}>
+          <div style={{ width: 40, height: 4, borderRadius: 2, background: 'var(--card-line)', margin: '0 auto 20px' }} />
+          <div style={{ fontFamily: 'var(--font-title)', fontWeight: 700, fontSize: 17, color: 'var(--ink)', marginBottom: 16 }}>Export Reports</div>
+          {[
+            { fmt: 'PDF',   icon: 'clipboard', desc: 'Formatted report with evidence links' },
+            { fmt: 'Excel', icon: 'list',      desc: 'Spreadsheet with all fields and filters' },
+            { fmt: 'CSV',   icon: 'download',  desc: 'Raw data for system import' },
+          ].map(e => (
+            <button key={e.fmt} className="btn" onClick={() => onExport(e.fmt)}
+              style={{ width: '100%', justifyContent: 'flex-start', gap: 14, padding: '14px 16px', borderRadius: 14, marginBottom: 10,
+                background: 'var(--shell-3)', border: '1px solid var(--shell-line)' }}>
+              <div style={{ width: 40, height: 40, borderRadius: 11, background: 'color-mix(in srgb, var(--accent) 14%, transparent)',
+                display: 'grid', placeItems: 'center', color: 'var(--accent)', flexShrink: 0 }}>
+                <Icon name={e.icon} size={20} />
+              </div>
+              <div style={{ textAlign: 'left' }}>
+                <div style={{ fontWeight: 700, fontSize: 15, color: 'var(--ink)', fontFamily: 'var(--font-title)' }}>Download {e.fmt}</div>
+                <div style={{ color: 'var(--ink-faint)', fontSize: 12.5, marginTop: 2 }}>{e.desc}</div>
+              </div>
+            </button>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
   function ReportsScreen({ A, data, mode, setMode, incidents, addIncident }) {
+    const [filter, setFilter] = useState('All');
+    const [showExport, setShowExport] = useState(false);
+
     if (mode === 'form') return <IncidentForm A={A} data={data} onCancel={() => setMode('list')}
       onSubmit={(inc) => { addIncident(inc); setMode('sent'); }} />;
     if (mode === 'sent') return <IncidentSent A={A} onDone={() => setMode('list')} inc={incidents[0]} />;
+
+    const filtered = incidents.filter(inc => {
+      if (filter === 'All') return true;
+      if (filter === 'Open') return inc.status !== 'Resolved';
+      if (filter === 'Resolved') return inc.status === 'Resolved';
+      return inc.category.includes(filter);
+    });
+
     return (
       <div className="scroll screen-in">
-        <AppHeader eyebrow="Field Reports" title="Incidents" big
-          right={<button className="btn" onClick={() => A.go('reports', { mode: 'form' })} style={{ width: 44, height: 44, borderRadius: 13,
-            background: 'var(--accent)', color: '#fff' }}><Icon name="plus" size={22} stroke={2.6} /></button>} />
-        <div style={{ padding: '4px 16px 24px' }}>
-          <div style={{ display: 'flex', gap: 10, marginBottom: 16 }}>
-            <StatTile n={incidents.filter(i => i.status !== 'Resolved').length} label="Open" tone="warn" />
-            <StatTile n={incidents.filter(i => i.status === 'Resolved').length} label="Resolved" tone="ok" />
-            <StatTile n={incidents.length} label="Today" tone="accent" />
-          </div>
-          {incidents.map((inc, i) => (
-            <div key={i} className="card" style={{ padding: 15, marginBottom: 11 }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 10 }}>
-                <div style={{ flex: 1 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                    <SevDot tone={SEV.find(s => s.k === inc.severity)?.tone} />
-                    <span className="t-eyebrow" style={{ color: 'var(--ink-faint)' }}>{inc.category}</span>
-                  </div>
-                  <div className="t-h3" style={{ color: 'var(--ink)', marginTop: 6 }}>{inc.title}</div>
-                </div>
-                <IncidentStatus status={inc.status} />
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginTop: 11, color: 'var(--ink-faint)', fontSize: 12, fontWeight: 500 }}>
-                <span className="t-mono">{inc.time}</span>
-                <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}><Icon name="pin" size={12} />{data.site}</span>
-                {inc.evidence > 0 && <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}><Icon name="camera" size={12} />{inc.evidence}</span>}
-              </div>
+        <AppHeader eyebrow="Field Reports" title="Incidents"
+          right={
+            <div style={{ display: 'flex', gap: 8 }}>
+              <button className="btn" onClick={() => setShowExport(true)}
+                style={{ width: 44, height: 44, borderRadius: 13, background: 'var(--shell-3)', border: '1px solid var(--shell-line)', color: 'var(--on-shell)' }}>
+                <Icon name="download" size={20} />
+              </button>
+              <button className="btn" aria-label="New incident" onClick={() => A.go('reports', { mode: 'form' })}
+                style={{ width: 44, height: 44, borderRadius: 13, background: 'var(--accent)', color: '#fff' }}>
+                <Icon name="plus" size={22} stroke={2.6} />
+              </button>
             </div>
-          ))}
+          } />
+
+        <div style={{ padding: '4px 16px 24px' }}>
+          {/* stat tiles */}
+          <div style={{ display: 'flex', gap: 10, marginBottom: 16 }}>
+            <StatTile n={incidents.filter(i => i.status !== 'Resolved').length} label="Open"     tone="warn" />
+            <StatTile n={incidents.filter(i => i.status === 'Resolved').length}  label="Resolved" tone="ok" />
+            <StatTile n={incidents.length}                                        label="Total"    tone="accent" />
+          </div>
+
+          {/* filter chips — FR-60 */}
+          <div style={{ display: 'flex', gap: 8, overflowX: 'auto', paddingBottom: 4, marginBottom: 16 }} className="scroll">
+            {FILTERS.map(f => (
+              <button key={f} onClick={() => setFilter(f)} className="btn"
+                style={{ flexShrink: 0, height: 34, padding: '0 14px', borderRadius: 999, fontSize: 13, fontWeight: 700, fontFamily: 'var(--font-title)',
+                  background: filter === f ? 'var(--accent)' : 'var(--card)',
+                  color: filter === f ? '#fff' : 'var(--ink-dim)',
+                  border: `1px solid ${filter === f ? 'var(--accent)' : 'var(--card-line)'}` }}>
+                {f}
+              </button>
+            ))}
+          </div>
+
+          {/* incident list */}
+          {filtered.length === 0
+            ? <div className="card" style={{ padding: 24, textAlign: 'center', color: 'var(--ink-faint)', fontSize: 14 }}>No incidents match this filter</div>
+            : filtered.map((inc, i) => (
+              <div key={i} className="card" style={{ padding: 15, marginBottom: 11 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 10 }}>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                      <SevDot tone={SEV.find(s => s.k === inc.severity)?.tone} />
+                      <span className="t-eyebrow" style={{ color: 'var(--ink-faint)' }}>{inc.category}</span>
+                    </div>
+                    <div className="t-h3" style={{ color: 'var(--ink)', marginTop: 6 }}>{inc.title}</div>
+                  </div>
+                  <IncidentStatus status={inc.status} />
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginTop: 11, color: 'var(--ink-faint)', fontSize: 12, fontWeight: 500 }}>
+                  <span className="t-mono">{inc.time}</span>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}><Icon name="pin" size={12} />{data.site}</span>
+                  {inc.evidence > 0 && <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}><Icon name="camera" size={12} />{inc.evidence}</span>}
+                </div>
+              </div>
+            ))}
         </div>
+
+        {showExport && <ExportSheet onClose={() => setShowExport(false)}
+          onExport={fmt => { setShowExport(false); A.toast({ msg: `Exporting ${filtered.length} incidents as ${fmt}…`, icon: 'download', tone: 'info' }); }} />}
       </div>
     );
   }
@@ -504,7 +663,7 @@
           </div>
         </div>
         <div style={{ padding: '0 16px 24px' }}>
-          <button className="btn btn-block btn-lg btn-accent" onClick={() => { A.reset(); }}>Back to Home</button>
+          <button className="btn btn-block btn-lg btn-accent" onClick={() => A.reset()}>Back to Home</button>
         </div>
       </div>
     );
@@ -556,5 +715,202 @@
     );
   }
 
-  Object.assign(window, { ActiveShiftScreen, PatrolScreen, ReportsScreen, SosScreen, MessagesScreen, ClockOutScreen });
+  /* ============================ VISITOR / CONTRACTOR LOG (FR-6.1) ============================ */
+  const ENTRY_TYPES = ['Visitor', 'Contractor', 'Vendor', 'Inspector'];
+  function VisitorLogScreen({ A, data }) {
+    const [entries, setEntries] = useState([
+      { type: 'Contractor', name: 'Brian Walsh', company: 'Allied HVAC', badge: 'C-041', timeIn: '09:15', timeOut: null, purpose: 'Rooftop unit maintenance' },
+      { type: 'Visitor', name: 'Sarah Lin', company: 'US Security Svc', badge: 'V-012', timeIn: '10:30', timeOut: '11:05', purpose: 'Site inspection' },
+    ]);
+    const [showForm, setShowForm] = useState(false);
+    const [form, setForm] = useState({ type: 'Visitor', name: '', company: '', badge: '', purpose: '' });
+    const f = (k, v) => setForm(p => ({ ...p, [k]: v }));
+    const submit = () => {
+      setEntries(e => [{ ...form, timeIn: new Date().toTimeString().slice(0,5), timeOut: null }, ...e]);
+      setShowForm(false);
+      setForm({ type: 'Visitor', name: '', company: '', badge: '', purpose: '' });
+      A.toast({ msg: `${form.type} registered · ${form.name}`, icon: 'check', tone: 'ok' });
+    };
+    const signOut = (i) => setEntries(e => e.map((x, idx) => idx === i ? { ...x, timeOut: new Date().toTimeString().slice(0,5) } : x));
+
+    if (showForm) return (
+      <div className="scroll screen-in">
+        <AppHeader eyebrow="Entry Log" title="Register Entry" onBack={() => setShowForm(false)} />
+        <div style={{ padding: '4px 16px 130px', display: 'flex', flexDirection: 'column', gap: 18 }}>
+          {/* type tabs */}
+          <div>
+            <div style={{ fontSize: 12.5, fontWeight: 700, color: 'var(--ink-faint)', letterSpacing: '.06em', textTransform: 'uppercase', marginBottom: 10 }}>Type</div>
+            <div style={{ display: 'flex', gap: 8, background: 'var(--card)', border: '1px solid var(--card-line)', borderRadius: 14, padding: 6 }}>
+              {ENTRY_TYPES.map(t => (
+                <button key={t} onClick={() => f('type', t)} className="btn"
+                  style={{ flex: 1, height: 36, borderRadius: 9, fontSize: 13, fontWeight: 700,
+                    background: form.type === t ? 'var(--accent)' : 'transparent', color: form.type === t ? '#fff' : 'var(--ink-faint)' }}>{t}</button>
+              ))}
+            </div>
+          </div>
+          {[
+            { label: 'Full name', key: 'name', icon: 'user', placeholder: 'e.g. John Smith' },
+            { label: 'Company / Organization', key: 'company', icon: 'building', placeholder: 'e.g. Allied Services' },
+            { label: 'Badge / ID number', key: 'badge', icon: 'lock', placeholder: 'e.g. C-041' },
+          ].map(field => (
+            <div key={field.key}>
+              <div style={{ fontSize: 12.5, fontWeight: 700, color: 'var(--ink-faint)', letterSpacing: '.06em', textTransform: 'uppercase', marginBottom: 8 }}>{field.label}</div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12, height: 52, padding: '0 14px', background: 'var(--card)', border: '1px solid var(--card-line)', borderRadius: 14 }}>
+                <Icon name={field.icon} size={18} color="var(--ink-faint)" />
+                <input value={form[field.key]} onChange={e => f(field.key, e.target.value)} placeholder={field.placeholder}
+                  style={{ flex: 1, background: 'none', border: 0, outline: 'none', color: 'var(--ink)', fontSize: 15, fontFamily: 'var(--font-body)', fontWeight: 500 }} />
+              </div>
+            </div>
+          ))}
+          <div>
+            <div style={{ fontSize: 12.5, fontWeight: 700, color: 'var(--ink-faint)', letterSpacing: '.06em', textTransform: 'uppercase', marginBottom: 8 }}>Purpose of visit</div>
+            <textarea value={form.purpose} onChange={e => f('purpose', e.target.value)} placeholder="Describe the reason for entry…"
+              style={{ width: '100%', minHeight: 80, resize: 'none', padding: '12px 14px', borderRadius: 14, background: 'var(--card)',
+                border: '1px solid var(--card-line)', color: 'var(--ink)', fontSize: 14.5, fontFamily: 'var(--font-body)', lineHeight: 1.5, outline: 'none' }} />
+          </div>
+        </div>
+        <StickyBar>
+          <button className="btn btn-block btn-lg btn-accent" disabled={!form.name} onClick={submit}>
+            <Icon name="check" size={19} />Register {form.type}
+          </button>
+        </StickyBar>
+      </div>
+    );
+
+    return (
+      <div className="scroll screen-in">
+        <AppHeader eyebrow="Entry Log" title="Visitor & Contractor"
+          right={<button className="btn" aria-label="Add entry" onClick={() => setShowForm(true)}
+            style={{ width: 44, height: 44, borderRadius: 13, background: 'var(--accent)', color: '#fff' }}>
+            <Icon name="plus" size={22} stroke={2.6} />
+          </button>} />
+        <div style={{ padding: '4px 16px 32px' }}>
+          <div style={{ display: 'flex', gap: 10, marginBottom: 16 }}>
+            {[
+              { n: entries.filter(e => !e.timeOut).length, label: 'On Site', tone: 'var(--ok)' },
+              { n: entries.filter(e => !!e.timeOut).length, label: 'Signed Out', tone: 'var(--ink-faint)' },
+              { n: entries.length, label: 'Total', tone: 'var(--accent)' },
+            ].map(k => (
+              <div key={k.label} className="card" style={{ flex: 1, padding: '12px 10px', textAlign: 'center' }}>
+                <div style={{ fontFamily: 'var(--font-title)', fontWeight: 800, fontSize: 22, color: k.tone, lineHeight: 1 }}>{k.n}</div>
+                <div style={{ color: 'var(--ink-faint)', fontSize: 11, fontWeight: 600, marginTop: 4 }}>{k.label}</div>
+              </div>
+            ))}
+          </div>
+          {entries.map((e, i) => (
+            <div key={i} className="card" style={{ padding: 15, marginBottom: 11 }}>
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
+                <div style={{ width: 42, height: 42, borderRadius: 12, flexShrink: 0, display: 'grid', placeItems: 'center',
+                  background: e.timeOut ? 'var(--card-2)' : 'color-mix(in srgb, var(--ok) 14%, transparent)',
+                  color: e.timeOut ? 'var(--ink-faint)' : 'var(--ok)' }}>
+                  <Icon name="user" size={22} />
+                </div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8 }}>
+                    <div style={{ fontFamily: 'var(--font-title)', fontWeight: 700, fontSize: 15, color: 'var(--ink)' }}>{e.name}</div>
+                    <span style={{ padding: '3px 9px', borderRadius: 999, fontSize: 11.5, fontWeight: 700, fontFamily: 'var(--font-title)', flexShrink: 0,
+                      background: e.timeOut ? 'var(--card-2)' : 'color-mix(in srgb, var(--ok) 14%, transparent)',
+                      color: e.timeOut ? 'var(--ink-faint)' : 'var(--ok)' }}>{e.timeOut ? 'Signed out' : 'On site'}</span>
+                  </div>
+                  <div style={{ color: 'var(--ink-faint)', fontSize: 12.5, marginTop: 2 }}>{e.type} · {e.company} · {e.badge}</div>
+                  <div style={{ color: 'var(--ink-faint)', fontSize: 12.5, marginTop: 3, lineHeight: 1.4 }}>{e.purpose}</div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginTop: 8 }}>
+                    <span className="t-mono" style={{ fontSize: 12, color: 'var(--ok)' }}>IN {e.timeIn}</span>
+                    {e.timeOut && <span className="t-mono" style={{ fontSize: 12, color: 'var(--ink-faint)' }}>OUT {e.timeOut}</span>}
+                    {!e.timeOut && (
+                      <button className="btn btn-md btn-ghost-light" style={{ height: 30, padding: '0 12px', fontSize: 12 }} onClick={() => signOut(i)}>
+                        Sign Out
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  /* ============================ DAILY ACTIVITY REPORT (FR-42) ============================ */
+  const DAR_ACTIVITIES = [
+    'Perimeter check completed', 'Access control maintained', 'Contractor/visitor logged',
+    'Incident reported to supervisor', 'Parking lot checked', 'Lighting inspected',
+    'Alarm/alert response', 'Relief guard handed over',
+  ];
+  function DailyActivityScreen({ A, data }) {
+    const [checked, setChecked] = useState([0, 1]);
+    const [notes, setNotes] = useState('');
+    const [submitted, setSubmitted] = useState(false);
+    const toggle = (i) => setChecked(p => p.includes(i) ? p.filter(x => x !== i) : [...p, i]);
+
+    if (submitted) return (
+      <div className="scroll screen-in" style={{ display: 'flex', flexDirection: 'column' }}>
+        <AppHeader title="" onBack={() => { setSubmitted(false); A.go('shift'); }} />
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '0 24px 60px', textAlign: 'center' }}>
+          <div style={{ width: 80, height: 80, borderRadius: 999, background: 'color-mix(in srgb,var(--ok) 14%,transparent)', margin: '0 auto', display: 'grid', placeItems: 'center' }}>
+            <div style={{ width: 58, height: 58, borderRadius: 999, background: 'var(--ok)', display: 'grid', placeItems: 'center' }}>
+              <Icon name="check" size={34} stroke={3} color="#fff" /></div>
+          </div>
+          <div className="t-h1" style={{ color: 'var(--on-shell)', marginTop: 20 }}>DAR Submitted</div>
+          <div style={{ color: 'var(--on-shell-dim)', fontSize: 14.5, marginTop: 8, lineHeight: 1.5 }}>
+            Your Daily Activity Report was filed at {new Date().toTimeString().slice(0,5)}.
+          </div>
+          <div className="card" style={{ marginTop: 24, padding: '14px 16px', display: 'flex', gap: 12, alignItems: 'center' }}>
+            <Icon name="check" size={20} color="var(--ok)" stroke={2.4} />
+            <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--ink)' }}>{checked.length} activities logged · {notes ? 'notes included' : 'no additional notes'}</span>
+          </div>
+          <button className="btn btn-block btn-lg btn-accent" style={{ marginTop: 28 }} onClick={() => { setSubmitted(false); A.go('shift'); }}>Back to Shift</button>
+        </div>
+      </div>
+    );
+
+    return (
+      <div className="scroll screen-in">
+        <AppHeader eyebrow="Daily Report" title="Activity Report" onBack={() => A.go('shift')} />
+        <div style={{ padding: '4px 16px 130px' }}>
+          {/* shift context */}
+          <div className="card" style={{ padding: '12px 16px', display: 'flex', gap: 12, alignItems: 'center', marginBottom: 22 }}>
+            <Icon name="clock" size={18} color="var(--accent)" />
+            <div>
+              <div style={{ fontWeight: 700, fontSize: 14, color: 'var(--ink)', fontFamily: 'var(--font-title)' }}>{data.site}</div>
+              <div className="t-mono" style={{ fontSize: 12.5, color: 'var(--ink-faint)', marginTop: 2 }}>{data.shift} · {new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</div>
+            </div>
+          </div>
+
+          <Section title="Activities Completed">
+            <div className="card" style={{ padding: '6px 16px' }}>
+              {DAR_ACTIVITIES.map((act, i) => (
+                <div key={i} onClick={() => toggle(i)}
+                  style={{ display: 'flex', alignItems: 'center', gap: 13, padding: '13px 0', cursor: 'pointer',
+                    borderBottom: i < DAR_ACTIVITIES.length - 1 ? '1px solid var(--card-line)' : 'none' }}>
+                  <div style={{ width: 24, height: 24, borderRadius: 8, flex: '0 0 24px', display: 'grid', placeItems: 'center',
+                    background: checked.includes(i) ? 'var(--ok)' : 'transparent',
+                    border: checked.includes(i) ? 'none' : '2px solid var(--card-line)' }}>
+                    {checked.includes(i) && <Icon name="check" size={14} stroke={3} color="#fff" />}
+                  </div>
+                  <span style={{ fontSize: 14.5, fontWeight: 500, color: checked.includes(i) ? 'var(--ink-faint)' : 'var(--ink)',
+                    textDecoration: checked.includes(i) ? 'line-through' : 'none' }}>{act}</span>
+                </div>
+              ))}
+            </div>
+          </Section>
+
+          <Section title="Additional Notes" style={{ marginTop: 22 }}>
+            <textarea value={notes} onChange={e => setNotes(e.target.value)}
+              placeholder="Any notable events, observations, or follow-up items…"
+              style={{ width: '100%', minHeight: 100, resize: 'none', padding: 15, borderRadius: 'var(--r-card)', background: 'var(--card)',
+                border: '1px solid var(--card-line)', color: 'var(--ink)', fontSize: 14.5, fontFamily: 'var(--font-body)', lineHeight: 1.5, outline: 'none' }} />
+          </Section>
+        </div>
+        <StickyBar>
+          <button className="btn btn-block btn-lg btn-accent" disabled={checked.length === 0} onClick={() => setSubmitted(true)}>
+            <Icon name="send" size={19} />Submit DAR · {checked.length} items
+          </button>
+        </StickyBar>
+      </div>
+    );
+  }
+
+  Object.assign(window, { ActiveShiftScreen, PatrolScreen, ReportsScreen, SosScreen, MessagesScreen, ClockOutScreen, VisitorLogScreen, DailyActivityScreen });
 })();
