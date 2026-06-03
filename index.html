@@ -11,17 +11,17 @@
   <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
 </head>
 <body>
-  <div class="stage">
-    <div id="root"></div>
-  </div>
+  <div id="root"></div>
+  <script type="text/babel" src="design-canvas.jsx"></script>
   <script type="text/babel" src="tweaks-panel.jsx"></script>
   <script type="text/babel" src="icons.jsx"></script>
   <script type="text/babel" src="components.jsx"></script>
   <script type="text/babel" src="screens-core.jsx"></script>
   <script type="text/babel" src="screens-active.jsx"></script>
   <script type="text/babel" src="app.jsx"></script>
+  <script type="text/babel" src="flow-canvas.jsx"></script>
   <script type="text/babel">
-    ReactDOM.createRoot(document.getElementById('root')).render(<window.ViperApp />);
+    ReactDOM.createRoot(document.getElementById('root')).render(<window.ViperExperience />);
   </script>
 </body>
 </html>
