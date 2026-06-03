@@ -192,11 +192,9 @@
               <div className="t-eyebrow" style={{ color: 'var(--on-shell-dim)' }}>{greeting}</div>
               <div className="t-h2" style={{ color: 'var(--on-shell)', marginTop: 3 }}>Officer Carter</div>
             </div>
-            <button className="btn" onClick={() => A.go('messages')} style={{ width: 44, height: 44, borderRadius: 13, position: 'relative',
+            <button className="btn" aria-label="Log out" onClick={() => A.go('signin')} style={{ width: 44, height: 44, borderRadius: 13,
               background: 'var(--shell-3)', border: '1px solid var(--shell-line)', color: 'var(--on-shell)' }}>
-              <Icon name="chat" size={21} />
-              {counts.messages > 0 && <span style={{ position: 'absolute', top: 8, right: 9, width: 9, height: 9, borderRadius: 999,
-                background: 'var(--danger)', border: '2px solid var(--shell)' }} />}
+              <Icon name="x" size={19} />
             </button>
           </div>
         </div>
