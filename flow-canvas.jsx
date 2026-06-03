@@ -80,38 +80,36 @@
       .vf-node-card { margin-top: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(15,23,42,.08), 0 20px 46px rgba(15,23,42,.13); border: 1px solid rgba(15,23,42,.08); background: #fff; }
       .vf-hub-callout { position: absolute; z-index: 3; width: 260px; padding: 14px 16px; border-radius: 14px; background: #fff; border: 1px solid rgba(15,23,42,.1); box-shadow: 0 14px 36px rgba(15,23,42,.11); color: #475569; font-size: 13px; line-height: 1.45; }
       .vf-hub-callout strong { display: block; font-family: var(--font-title); color: #0f172a; margin-bottom: 4px; }
-      .vf-design-system { position: absolute; z-index: 3; width: 860px; padding: 14px; border-radius: 18px; background: #dfe9f8; border: 3px solid #5960f2; box-shadow: 0 24px 56px rgba(30,41,59,.18); }
-      .vf-ds-caption { position: absolute; left: 6px; top: -30px; display: flex; align-items: center; gap: 6px; font-family: var(--font-title); font-size: 14px; font-weight: 800; color: #f8fafc; text-shadow: 0 1px 2px rgba(0,0,0,.22); }
-      .vf-ds-grid { display: grid; grid-template-columns: 210px 1fr 1fr 1fr; gap: 12px; }
-      .vf-ds-stack { display: grid; gap: 10px; }
-      .vf-ds-card { min-height: 118px; border-radius: 14px; background: #edf4ff; border: 1px solid rgba(98,116,150,.15); padding: 16px; color: #0f172a; }
-      .vf-ds-color { overflow: hidden; min-height: 116px; padding: 0; }
-      .vf-ds-color-head { height: 66px; padding: 14px 16px; display: flex; justify-content: space-between; font-family: var(--font-title); font-size: 13px; font-weight: 800; color: #fff; background: var(--base); }
-      .vf-ds-ramp { display: grid; grid-template-columns: repeat(9, 1fr); height: 50px; }
+      .vf-design-system { position: absolute; z-index: 3; width: 760px; padding: 18px; border-radius: 18px; background: #101827; border: 1px solid rgba(148,163,184,.3); box-shadow: 0 24px 56px rgba(15,23,42,.24); color: #e5eefc; }
+      .vf-ds-caption { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 14px; }
+      .vf-ds-title { display: flex; align-items: center; gap: 8px; font-family: var(--font-title); font-size: 16px; font-weight: 800; }
+      .vf-ds-subtitle { margin-top: 4px; color: #91a2b8; font-size: 12px; }
+      .vf-ds-badge { height: 30px; padding: 0 10px; display: inline-flex; align-items: center; gap: 6px; border-radius: 999px; background: rgba(37,99,235,.16); color: #bfdbfe; font-family: var(--font-title); font-size: 11px; font-weight: 800; white-space: nowrap; }
+      .vf-ds-grid { display: grid; grid-template-columns: 1.12fr .88fr; gap: 14px; }
+      .vf-ds-token-list { display: grid; gap: 10px; }
+      .vf-ds-token { min-height: 82px; padding: 12px; border-radius: 14px; background: rgba(255,255,255,.055); border: 1px solid rgba(148,163,184,.18); display: grid; grid-template-columns: 128px 1fr; gap: 12px; }
+      .vf-ds-chip { border-radius: 12px; overflow: hidden; background: var(--base); box-shadow: inset 0 0 0 1px rgba(255,255,255,.18); }
+      .vf-ds-ramp { height: 100%; display: grid; grid-template-rows: 1fr 20px; }
+      .vf-ds-ramp-main { background: var(--base); }
+      .vf-ds-ramp-row { display: grid; grid-template-columns: repeat(5, 1fr); }
       .vf-ds-step { background: color-mix(in srgb, var(--base) var(--mix), #fff); }
-      .vf-ds-step:first-child { background: #06101f; border-bottom-left-radius: 14px; }
-      .vf-ds-step:last-child { border-bottom-right-radius: 14px; }
-      .vf-ds-meta { display: flex; justify-content: space-between; font-family: var(--font-title); font-size: 12px; font-weight: 800; color: #7b8798; }
-      .vf-ds-type { display: flex; align-items: flex-end; justify-content: space-between; min-height: 110px; }
-      .vf-ds-type strong { font-family: var(--font-title); font-size: 92px; line-height: .74; color: var(--type); letter-spacing: 0; }
-      .vf-ds-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; align-content: center; min-height: 112px; }
-      .vf-ds-button { height: 34px; border-radius: 6px; border: 1px solid transparent; font-family: var(--font-title); font-size: 12px; font-weight: 800; display: grid; place-items: center; }
-      .vf-ds-button.primary { background: #4f46e5; color: #fff; }
-      .vf-ds-button.secondary { background: #e6eefb; color: #27324a; }
-      .vf-ds-button.inverted { background: #142236; color: #fff; }
-      .vf-ds-button.outlined { background: transparent; border-color: #93a2b8; color: #27324a; }
-      .vf-ds-search { height: 42px; border-radius: 6px; border: 1px solid #b8c5da; background: #e7eefb; display: flex; align-items: center; gap: 10px; padding: 0 14px; color: #475569; font-size: 14px; margin-top: 20px; }
-      .vf-ds-lines { display: grid; gap: 10px; padding-top: 24px; }
-      .vf-ds-line { height: 6px; border-radius: 999px; background: #d4e2f6; overflow: hidden; }
-      .vf-ds-line span { display: block; height: 100%; border-radius: inherit; background: var(--line); width: var(--w); }
-      .vf-ds-nav { height: 54px; margin-top: 24px; border-radius: 18px; background: #e6eefb; display: flex; align-items: center; justify-content: center; gap: 30px; color: #0f172a; }
-      .vf-ds-nav span { width: 34px; height: 34px; border-radius: 999px; display: grid; place-items: center; }
-      .vf-ds-nav span:first-child { background: #4f46e5; color: #fff; }
-      .vf-ds-icon-row { display: flex; align-items: center; justify-content: center; gap: 12px; min-height: 112px; }
-      .vf-ds-icon-chip { width: 34px; height: 34px; border-radius: 999px; display: grid; place-items: center; color: #fff; background: var(--chip); }
-      .vf-ds-tool-row { display: flex; gap: 12px; align-items: center; justify-content: center; min-height: 112px; }
-      .vf-ds-tool { width: 48px; height: 48px; border-radius: 8px; display: grid; place-items: center; background: #8b5cf6; color: #fff; }
-      .vf-ds-tool-label { height: 36px; padding: 0 18px; border-radius: 6px; display: inline-flex; gap: 8px; align-items: center; background: #6366f1; color: #fff; font-family: var(--font-title); font-size: 12px; font-weight: 800; }
+      .vf-ds-token-meta { min-width: 0; }
+      .vf-ds-token-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-family: var(--font-title); font-size: 13px; font-weight: 800; }
+      .vf-ds-token-top code { color: #cbd5e1; font-family: var(--font-mono); font-size: 11px; font-weight: 800; }
+      .vf-ds-token p { margin: 7px 0 0; color: #9aaabd; font-size: 12px; line-height: 1.35; }
+      .vf-ds-preview { border-radius: 14px; background: #eef4ff; color: #0f172a; padding: 14px; display: grid; gap: 12px; }
+      .vf-ds-preview-card { min-height: 82px; border-radius: 12px; background: #fff; border: 1px solid rgba(15,23,42,.08); box-shadow: 0 10px 20px rgba(15,23,42,.08); padding: 12px; }
+      .vf-ds-preview-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+      .vf-ds-preview-title { font-family: var(--font-title); font-size: 13px; font-weight: 800; color: #0f172a; }
+      .vf-ds-preview-text { margin-top: 5px; color: #64748b; font-size: 12px; }
+      .vf-ds-action { height: 34px; padding: 0 12px; border-radius: 10px; display: inline-flex; align-items: center; gap: 7px; background: #2563eb; color: #fff; font-family: var(--font-title); font-size: 12px; font-weight: 800; }
+      .vf-ds-status-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+      .vf-ds-status { min-height: 66px; border-radius: 12px; padding: 10px; background: color-mix(in srgb, var(--tone) 12%, #fff); border: 1px solid color-mix(in srgb, var(--tone) 28%, transparent); }
+      .vf-ds-status span { width: 24px; height: 24px; border-radius: 999px; display: grid; place-items: center; background: var(--tone); color: #fff; margin-bottom: 8px; }
+      .vf-ds-status strong { display: block; font-family: var(--font-title); font-size: 11px; color: #162033; }
+      .vf-ds-nav { height: 48px; border-radius: 16px; background: #dbeafe; display: flex; align-items: center; justify-content: space-around; color: #0f172a; }
+      .vf-ds-nav span { width: 32px; height: 32px; border-radius: 999px; display: grid; place-items: center; }
+      .vf-ds-nav span:first-child { background: #2563eb; color: #fff; }
       .vf-map-wire-layer { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; z-index: 1; }
       .vf-map-marker-layer { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; z-index: 5; }
       .vf-map-wire { fill: none; stroke: #2563eb; stroke-width: 3.5; stroke-linecap: round; stroke-linejoin: round; opacity: .82; }
@@ -488,95 +486,85 @@
   }
 
   function DesignSystemPalette() {
-    const ramps = [
-      { name: 'Primary', hex: '#2563EB', base: '#4f46e5' },
-      { name: 'Secondary', hex: '#0EA5E9', base: '#0ea5e9' },
-      { name: 'Success', hex: '#16A34A', base: '#16a34a' },
-      { name: 'Neutral', hex: '#64748B', base: '#64748b' },
+    const tokens = [
+      { name: 'Command Blue', hex: '#2563EB', base: '#2563eb', use: 'Primary actions, selected bottom nav, active links.' },
+      { name: 'Shift Green', hex: '#16A34A', base: '#16a34a', use: 'Clock-in success, on-site state, completed patrol steps.' },
+      { name: 'Incident Amber', hex: '#F59E0B', base: '#f59e0b', use: 'Open reports, warnings, items needing supervisor attention.' },
+      { name: 'SOS Red', hex: '#DC2626', base: '#dc2626', use: 'Emergency action, critical alerts, destructive safety states.' },
+      { name: 'Shell Ink', hex: '#0F172A', base: '#0f172a', use: 'Headers, dark surfaces, high-contrast operational text.' },
     ];
-    const mixes = ['100%', '88%', '76%', '64%', '52%', '40%', '28%', '16%', '6%'];
+    const mixes = ['100%', '78%', '56%', '34%', '12%'];
 
     return (
       <div className="vf-design-system">
         <div className="vf-ds-caption">
-          <window.Icon name="target" size={16} stroke={2.4} />
-          ViperOne Design System
+          <div>
+            <div className="vf-ds-title">
+              <window.Icon name="target" size={16} stroke={2.4} />
+              ViperOne Color Language
+            </div>
+            <div className="vf-ds-subtitle">Inspired by a palette board, tailored to the guard workflow.</div>
+          </div>
+          <div className="vf-ds-badge">
+            <window.Icon name="shield" size={13} stroke={2.4} />
+            App tokens
+          </div>
         </div>
         <div className="vf-ds-grid">
-          <div className="vf-ds-stack">
-            {ramps.map((ramp) => (
-              <div className="vf-ds-card vf-ds-color" key={ramp.name} style={{ '--base': ramp.base }}>
-                <div className="vf-ds-color-head">
-                  <span>{ramp.name}</span>
-                  <span>{ramp.hex}</span>
+          <div className="vf-ds-token-list">
+            {tokens.map((token) => (
+              <div className="vf-ds-token" key={token.name} style={{ '--base': token.base }}>
+                <div className="vf-ds-chip">
+                  <div className="vf-ds-ramp">
+                    <div className="vf-ds-ramp-main" />
+                    <div className="vf-ds-ramp-row">
+                      {mixes.map((mix) => <span key={mix} className="vf-ds-step" style={{ '--mix': mix }} />)}
+                    </div>
+                  </div>
                 </div>
-                <div className="vf-ds-ramp">
-                  {mixes.map((mix) => <span key={mix} className="vf-ds-step" style={{ '--mix': mix }} />)}
+                <div className="vf-ds-token-meta">
+                  <div className="vf-ds-token-top">
+                    <span>{token.name}</span>
+                    <code>{token.hex}</code>
+                  </div>
+                  <p>{token.use}</p>
                 </div>
               </div>
             ))}
           </div>
 
-          <div className="vf-ds-stack">
-            <div className="vf-ds-card">
-              <div className="vf-ds-meta"><span>Headline</span><span>Geist</span></div>
-              <div className="vf-ds-type" style={{ '--type': '#0f172a' }}><strong>Aa</strong></div>
-            </div>
-            <div className="vf-ds-card">
-              <div className="vf-ds-meta"><span>Body</span><span>Inter</span></div>
-              <div className="vf-ds-type" style={{ '--type': '#4b4b5f' }}><strong>Aa</strong></div>
-            </div>
-            <div className="vf-ds-card">
-              <div className="vf-ds-meta"><span>Label</span><span>Geist</span></div>
-              <div className="vf-ds-type" style={{ '--type': '#52525f' }}><strong>Aa</strong></div>
-            </div>
-          </div>
-
-          <div className="vf-ds-stack">
-            <div className="vf-ds-card">
-              <div className="vf-ds-buttons">
-                <span className="vf-ds-button primary">Primary</span>
-                <span className="vf-ds-button secondary">Secondary</span>
-                <span className="vf-ds-button inverted">Inverted</span>
-                <span className="vf-ds-button outlined">Outlined</span>
+          <div className="vf-ds-preview">
+            <div className="vf-ds-preview-card">
+              <div className="vf-ds-preview-row">
+                <div>
+                  <div className="vf-ds-preview-title">Active shift surface</div>
+                  <div className="vf-ds-preview-text">Blue leads action, green confirms state.</div>
+                </div>
+                <span className="vf-ds-action">
+                  <window.Icon name="clock" size={14} stroke={2.5} />
+                  Clock In
+                </span>
               </div>
             </div>
-            <div className="vf-ds-card">
-              <div className="vf-ds-lines">
-                <div className="vf-ds-line"><span style={{ '--line': '#4f46e5', '--w': '72%' }} /></div>
-                <div className="vf-ds-line"><span style={{ '--line': '#0e7490', '--w': '88%' }} /></div>
-                <div className="vf-ds-line"><span style={{ '--line': '#6d28d9', '--w': '56%' }} /></div>
+            <div className="vf-ds-status-grid">
+              <div className="vf-ds-status" style={{ '--tone': '#16a34a' }}>
+                <span><window.Icon name="check" size={13} stroke={3} /></span>
+                <strong>On Site</strong>
+              </div>
+              <div className="vf-ds-status" style={{ '--tone': '#f59e0b' }}>
+                <span><window.Icon name="flag" size={13} stroke={2.5} /></span>
+                <strong>Review</strong>
+              </div>
+              <div className="vf-ds-status" style={{ '--tone': '#dc2626' }}>
+                <span><window.Icon name="alert" size={13} stroke={2.5} /></span>
+                <strong>SOS</strong>
               </div>
             </div>
-            <div className="vf-ds-card">
-              <div className="vf-ds-tool-row">
-                <span className="vf-ds-tool"><window.Icon name="sign" size={20} stroke={2.5} /></span>
-                <span className="vf-ds-tool-label"><window.Icon name="sign" size={15} stroke={2.5} />Label</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="vf-ds-stack">
-            <div className="vf-ds-card">
-              <div className="vf-ds-search">
-                <window.Icon name="target" size={17} />
-                <span>Search</span>
-              </div>
-            </div>
-            <div className="vf-ds-card">
-              <div className="vf-ds-nav">
-                <span><window.Icon name="home" size={17} /></span>
-                <span><window.Icon name="route" size={17} /></span>
-                <span><window.Icon name="user" size={17} /></span>
-              </div>
-            </div>
-            <div className="vf-ds-card">
-              <div className="vf-ds-icon-row">
-                <span className="vf-ds-icon-chip" style={{ '--chip': '#4f46e5' }}><window.Icon name="target" size={16} /></span>
-                <span className="vf-ds-icon-chip" style={{ '--chip': '#0e7490' }}><window.Icon name="shield" size={16} /></span>
-                <span className="vf-ds-icon-chip" style={{ '--chip': '#7c3aed' }}><window.Icon name="flag" size={16} /></span>
-                <span className="vf-ds-icon-chip" style={{ '--chip': '#dc2626' }}><window.Icon name="alert" size={15} /></span>
-              </div>
+            <div className="vf-ds-nav">
+              <span><window.Icon name="home" size={16} /></span>
+              <span><window.Icon name="route" size={16} /></span>
+              <span><window.Icon name="clipboard" size={16} /></span>
+              <span><window.Icon name="chat" size={16} /></span>
             </div>
           </div>
         </div>
